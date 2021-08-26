@@ -30,41 +30,43 @@ import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
  */
 public class BlobColumnListElementGenerator extends AbstractXmlElementGenerator {
 
-    public BlobColumnListElementGenerator() {
-        super();
-    }
+	public BlobColumnListElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-        		introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getBlobColumnListId()));
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getBlobColumnListId()));
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        
-        Iterator<IntrospectedColumn> iter = introspectedTable.getBLOBColumns().iterator();
-        while (iter.hasNext()) {
-            sb.append(Ibatis2FormattingUtilities.getSelectListPhrase(iter.next()));
-            
-            if (iter.hasNext()) {
-                sb.append(", "); //$NON-NLS-1$
-            }
-            
-            if (sb.length() > 80) {
-                answer.addElement(new TextElement(sb.toString()));
-                sb.setLength(0);
-            }
-        }
+		StringBuilder sb = new StringBuilder();
 
-        if (sb.length() > 0) {
-            answer.addElement((new TextElement(sb.toString())));
-        }
+		Iterator<IntrospectedColumn> iter = introspectedTable.getBLOBColumns().iterator();
+		while (iter.hasNext()) {
+			sb.append(Ibatis2FormattingUtilities.getSelectListPhrase(iter.next()));
 
-        if (ibatorContext.getPlugins().sqlMapBlobColumnListElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			if (iter.hasNext()) {
+				sb.append(", "); //$NON-NLS-1$
+			}
+
+			if (sb.length() > 80) {
+				answer.addElement(new TextElement(sb.toString()));
+				sb.setLength(0);
+			}
+		}
+
+		if (sb.length() > 0) {
+			answer.addElement((new TextElement(sb.toString())));
+		}
+
+		if (ibatorContext.getPlugins().sqlMapBlobColumnListElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

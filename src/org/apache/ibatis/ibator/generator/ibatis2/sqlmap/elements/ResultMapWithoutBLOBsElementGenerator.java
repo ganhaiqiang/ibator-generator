@@ -17,6 +17,7 @@ package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
+import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
@@ -29,62 +30,58 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public ResultMapWithoutBLOBsElementGenerator() {
-        super();
-    }
+	public ResultMapWithoutBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        boolean useColumnIndex =
-            StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
-        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                introspectedTable.getBaseResultMapId()));
+	@Override
+	public void addElements(XmlElement parentElement) {
+		boolean useColumnIndex = StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
+		XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getBaseResultMapId()));
 
-        String returnType;
-        if (introspectedTable.getRules().generateBaseRecordClass()) {
-            returnType = introspectedTable.getBaseRecordType();
-        } else {
-            returnType = introspectedTable.getPrimaryKeyType();
-        }
-        
-        answer.addAttribute(new Attribute("class", //$NON-NLS-1$
-                returnType));
+		String returnType;
+		if (introspectedTable.getRules().generateBaseRecordClass()) {
+			returnType = introspectedTable.getBaseRecordType();
+		} else {
+			returnType = introspectedTable.getPrimaryKeyType();
+		}
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		answer.addAttribute(new Attribute("class", //$NON-NLS-1$
+				returnType));
 
-        int i = 1;
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
-                || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
-            i++;
-        }
-        
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getNonBLOBColumns()) {
-            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-            if (useColumnIndex) {
-                resultElement.addAttribute(new Attribute(
-                        "columnIndex", Integer.toString(i++))); //$NON-NLS-1$
-            } else {
-                resultElement.addAttribute(new Attribute(
-                    "column", Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            }
-            
-            resultElement.addAttribute(new Attribute(
-                    "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));
+		int i = 1;
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId()) || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
+			i++;
+		}
 
-            if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getNonBLOBColumns()) {
+			XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
-            answer.addElement(resultElement);
-        }
+			if (useColumnIndex) {
+				resultElement.addAttribute(new Attribute("columnIndex", Integer.toString(i++))); //$NON-NLS-1$
+			} else {
+				resultElement.addAttribute(new Attribute("column", Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
+			}
 
-        if (ibatorContext.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+			resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
+					introspectedColumn.getJdbcTypeName()));
+
+			if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
+			}
+
+			answer.addElement(resultElement);
+		}
+
+		if (ibatorContext.getPlugins().sqlMapResultMapWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

@@ -29,57 +29,58 @@ import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
  * @author Jeff Butler
  *
  */
-public class UpdateByExampleWithBLOBsElementGenerator extends
-        AbstractXmlElementGenerator {
+public class UpdateByExampleWithBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public UpdateByExampleWithBLOBsElementGenerator() {
-        super();
-    }
+	public UpdateByExampleWithBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                introspectedTable.getUpdateByExampleWithBLOBsStatementId()));
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getUpdateByExampleWithBLOBsStatementId()));
 
-        answer.addAttribute(new Attribute("parameterType", "map")); //$NON-NLS-1$ //$NON-NLS-2$
-        ibatorContext.getCommentGenerator().addComment(answer);
+		answer.addAttribute(new Attribute("parameterType", "map")); //$NON-NLS-1$ //$NON-NLS-2$
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("update "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("update "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        // set up for first column
-        sb.setLength(0);
-        sb.append("set "); //$NON-NLS-1$
+		// set up for first column
+		sb.setLength(0);
+		sb.append("set "); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
-        while (iter.hasNext()) {
-            IntrospectedColumn introspectedColumn = iter.next();
+		Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
+		while (iter.hasNext()) {
+			IntrospectedColumn introspectedColumn = iter.next();
 
-            sb.append(Ibatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
 
-            if (iter.hasNext()) {
-                sb.append(',');
-            }
+			if (iter.hasNext()) {
+				sb.append(',');
+			}
 
-            answer.addElement(new TextElement(sb.toString()));
+			answer.addElement(new TextElement(sb.toString()));
 
-            // set up for the next column
-            if (iter.hasNext()) {
-                sb.setLength(0);
-                OutputUtilities.xmlIndent(sb, 1);
-            }
-        }
-        
-        answer.addElement(getUpdateByExampleIncludeElement());
+			// set up for the next column
+			if (iter.hasNext()) {
+				sb.setLength(0);
+				OutputUtilities.xmlIndent(sb, 1);
+			}
+		}
 
-        if (ibatorContext.getPlugins().sqlMapUpdateByExampleWithBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		answer.addElement(getUpdateByExampleIncludeElement());
+
+		if (ibatorContext.getPlugins().sqlMapUpdateByExampleWithBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

@@ -27,66 +27,62 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public SelectByExampleWithoutBLOBsElementGenerator() {
-        super();
-    }
+	public SelectByExampleWithoutBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-        		 introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getSelectByExampleStatementId()));
-        answer
-                .addAttribute(new Attribute(
-                        "resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getSelectByExampleStatementId()));
+		answer.addAttribute(new Attribute("resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        answer.addElement(new TextElement("select")); //$NON-NLS-1$
-        XmlElement isParameterPresent = new XmlElement("isParameterPresent"); //$NON-NLS-1$
-        XmlElement isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("property", "distinct")); //$NON-NLS-1$ //$NON-NLS-2$
-        isEqualElement.addAttribute(new Attribute("compareValue", "true")); //$NON-NLS-1$ //$NON-NLS-2$
-        isEqualElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
-        isParameterPresent.addElement(isEqualElement);
-        answer.addElement(isParameterPresent);
+		answer.addElement(new TextElement("select")); //$NON-NLS-1$
+		XmlElement isParameterPresent = new XmlElement("isParameterPresent"); //$NON-NLS-1$
+		XmlElement isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
+		isEqualElement.addAttribute(new Attribute("property", "distinct")); //$NON-NLS-1$ //$NON-NLS-2$
+		isEqualElement.addAttribute(new Attribute("compareValue", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+		isEqualElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
+		isParameterPresent.addElement(isEqualElement);
+		answer.addElement(isParameterPresent);
 
-        StringBuilder sb = new StringBuilder();
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
-            sb.append('\'');
-            sb.append(introspectedTable.getSelectByExampleQueryId());
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-            answer.addElement(new TextElement(sb.toString()));
-        }
-        
-        answer.addElement(getBaseColumnListElement());
+		StringBuilder sb = new StringBuilder();
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
+			sb.append('\'');
+			sb.append(introspectedTable.getSelectByExampleQueryId());
+			sb.append("' as QUERYID,"); //$NON-NLS-1$
+			answer.addElement(new TextElement(sb.toString()));
+		}
 
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement((new TextElement(sb.toString())));
+		answer.addElement(getBaseColumnListElement());
 
-        XmlElement isParameterPresenteElement =
-            new XmlElement("isParameterPresent"); //$NON-NLS-1$
-        answer.addElement(isParameterPresenteElement);
-        
-        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
-        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
-        isParameterPresenteElement.addElement(includeElement);
+		sb.setLength(0);
+		sb.append("from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement((new TextElement(sb.toString())));
 
-        XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
-        isNotNullElement
-                .addAttribute(new Attribute("property", "orderByClause")); //$NON-NLS-1$ //$NON-NLS-2$
-        isNotNullElement
-                .addElement(new TextElement("order by $orderByClause$")); //$NON-NLS-1$
-        isParameterPresenteElement.addElement(isNotNullElement);
+		XmlElement isParameterPresenteElement = new XmlElement("isParameterPresent"); //$NON-NLS-1$
+		answer.addElement(isParameterPresenteElement);
 
-        if (ibatorContext.getPlugins().sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+		includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+				introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
+		isParameterPresenteElement.addElement(includeElement);
+
+		XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
+		isNotNullElement.addAttribute(new Attribute("property", "orderByClause")); //$NON-NLS-1$ //$NON-NLS-2$
+		isNotNullElement.addElement(new TextElement("order by $orderByClause$")); //$NON-NLS-1$
+		isParameterPresenteElement.addElement(isNotNullElement);
+
+		if (ibatorContext.getPlugins().sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

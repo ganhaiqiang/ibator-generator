@@ -19,35 +19,34 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 
-
 /**
  * @author matychen
  *
  */
 public class OraclePaginationHeadGenerator extends AbstractXmlElementGenerator {
 
-    public OraclePaginationHeadGenerator() {
-        super();
-    }
+	public OraclePaginationHeadGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id",  introspectedTable.getIbatis2SqlMapNamespace() + "."+"oracle_Pagination_Head")); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "oracle_Pagination_Head")); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        XmlElement dynamicElement = new XmlElement("dynamic");
-        XmlElement outerisNotEmptyElement = new XmlElement("isNotEmpty");
-        outerisNotEmptyElement.addAttribute(new Attribute("property", "oracleStart"));
-        XmlElement innerisNotEmptyElement = new XmlElement("isNotEmpty");
-        innerisNotEmptyElement.addAttribute(new Attribute("property", "oracleEnd"));
-        innerisNotEmptyElement.addElement(new TextElement("<![CDATA[select * from ( select row_.*, rownum rownum_ from ( ]]>"));
-        outerisNotEmptyElement.addElement(innerisNotEmptyElement);
-        dynamicElement.addElement(outerisNotEmptyElement);
-        answer.addElement(dynamicElement);
-       // 在第二个地方增加
-        parentElement.addElement(2,answer);
-    }
+		XmlElement dynamicElement = new XmlElement("dynamic");
+		XmlElement outerisNotEmptyElement = new XmlElement("isNotEmpty");
+		outerisNotEmptyElement.addAttribute(new Attribute("property", "oracleStart"));
+		XmlElement innerisNotEmptyElement = new XmlElement("isNotEmpty");
+		innerisNotEmptyElement.addAttribute(new Attribute("property", "oracleEnd"));
+		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[select * from ( select row_.*, rownum rownum_ from ( ]]>"));
+		outerisNotEmptyElement.addElement(innerisNotEmptyElement);
+		dynamicElement.addElement(outerisNotEmptyElement);
+		answer.addElement(dynamicElement);
+		// 在第二个地方增加
+		parentElement.addElement(2, answer);
+	}
 }

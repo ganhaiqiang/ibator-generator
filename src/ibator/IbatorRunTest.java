@@ -15,9 +15,8 @@ public class IbatorRunTest {
 		try {
 			List<String> warnings = new ArrayList<String>();
 			boolean overwrite = true;
-			File configFile = new File(ClassLoader.getSystemResource("ConfigIbatisExample.xml").getFile());
 			IbatorConfigurationParser cp = new IbatorConfigurationParser(warnings);
-			IbatorConfiguration config = cp.parseIbatorConfiguration(new File("D:/Program Files/eclipse/eclipse-workspace/ibator_cx/config/ConfigIbatisExample.xml"));
+			IbatorConfiguration config = cp.parseIbatorConfiguration(ClassLoader.getSystemClassLoader().getResourceAsStream("ConfigIbatisExample.xml"));
 			DefaultShellCallback callback = new DefaultShellCallback(overwrite);
 			Ibator ibator = new Ibator(config, callback, warnings);
 			ibator.generate(null);

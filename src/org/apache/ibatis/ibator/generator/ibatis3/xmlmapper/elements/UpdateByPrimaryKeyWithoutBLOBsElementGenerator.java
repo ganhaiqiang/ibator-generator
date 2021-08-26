@@ -29,72 +29,72 @@ import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
  * @author Jeff Butler
  *
  */
-public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
-        AbstractXmlElementGenerator {
+public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public UpdateByPrimaryKeyWithoutBLOBsElementGenerator() {
-        super();
-    }
+	public UpdateByPrimaryKeyWithoutBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id", introspectedTable.getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
-                introspectedTable.getBaseRecordType()));
+		answer.addAttribute(new Attribute("id", introspectedTable.getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+				introspectedTable.getBaseRecordType()));
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("update "); //$NON-NLS-1$
-        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("update "); //$NON-NLS-1$
+		sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        // set up for first column
-        sb.setLength(0);
-        sb.append("set "); //$NON-NLS-1$
+		// set up for first column
+		sb.setLength(0);
+		sb.append("set "); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iter = introspectedTable.getBaseColumns().iterator();
-        while (iter.hasNext()) {
-            IntrospectedColumn introspectedColumn = iter.next();
+		Iterator<IntrospectedColumn> iter = introspectedTable.getBaseColumns().iterator();
+		while (iter.hasNext()) {
+			IntrospectedColumn introspectedColumn = iter.next();
 
-            sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
+			sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
 
-            if (iter.hasNext()) {
-                sb.append(',');
-            }
+			if (iter.hasNext()) {
+				sb.append(',');
+			}
 
-            answer.addElement(new TextElement(sb.toString()));
+			answer.addElement(new TextElement(sb.toString()));
 
-            // set up for the next column
-            if (iter.hasNext()) {
-                sb.setLength(0);
-                OutputUtilities.xmlIndent(sb, 1);
-            }
-        }
+			// set up for the next column
+			if (iter.hasNext()) {
+				sb.setLength(0);
+				OutputUtilities.xmlIndent(sb, 1);
+			}
+		}
 
-        boolean and = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-            sb.setLength(0);
-            if (and) {
-                sb.append("  and "); //$NON-NLS-1$
-            } else {
-                sb.append("where "); //$NON-NLS-1$
-                and = true;
-            }
+		boolean and = false;
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			sb.setLength(0);
+			if (and) {
+				sb.append("  and "); //$NON-NLS-1$
+			} else {
+				sb.append("where "); //$NON-NLS-1$
+				and = true;
+			}
 
-            sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
-            answer.addElement(new TextElement(sb.toString()));
-        }
-        
-        if (ibatorContext.getPlugins().sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
+			answer.addElement(new TextElement(sb.toString()));
+		}
+
+		if (ibatorContext.getPlugins().sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

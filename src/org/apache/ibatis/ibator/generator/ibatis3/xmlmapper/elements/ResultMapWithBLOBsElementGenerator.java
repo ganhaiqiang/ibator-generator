@@ -17,6 +17,7 @@ package org.apache.ibatis.ibator.generator.ibatis3.xmlmapper.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
+import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
@@ -28,60 +29,57 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class ResultMapWithBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public ResultMapWithBLOBsElementGenerator() {
-        super();
-    }
+	public ResultMapWithBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id",  //$NON-NLS-1$
-                introspectedTable.getResultMapWithBLOBsId()));
-        
-        String returnType;
-        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            returnType = introspectedTable.getRecordWithBLOBsType();
-        } else {
-            // table has BLOBs, but no BLOB class - BLOB fields must be
-            // in the base class
-            returnType = introspectedTable.getBaseRecordType();
-        }
-        
-        answer.addAttribute(new Attribute("type", //$NON-NLS-1$
-                returnType));
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getResultMapWithBLOBsId()));
 
-        answer.addAttribute(new Attribute("extends", //$NON-NLS-1$
-                introspectedTable.getBaseResultMapId()));
+		String returnType;
+		if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+			returnType = introspectedTable.getRecordWithBLOBsType();
+		} else {
+			// table has BLOBs, but no BLOB class - BLOB fields must be
+			// in the base class
+			returnType = introspectedTable.getBaseRecordType();
+		}
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		answer.addAttribute(new Attribute("type", //$NON-NLS-1$
+				returnType));
 
-        int i = introspectedTable.getNonBLOBColumnCount() + 1;
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
-                || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
-            i++;
-        }
+		answer.addAttribute(new Attribute("extends", //$NON-NLS-1$
+				introspectedTable.getBaseResultMapId()));
 
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
-            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
-            
-            resultElement.addAttribute(new Attribute(
-                "column", Ibatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute(
-                    "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute(
-                    "jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-            if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+		int i = introspectedTable.getNonBLOBColumnCount() + 1;
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId()) || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
+			i++;
+		}
 
-            answer.addElement(resultElement);
-        }
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
+			XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
-        if (ibatorContext.getPlugins().sqlMapResultMapWithBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			resultElement.addAttribute(new Attribute("column", Ibatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
+			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
+
+			if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
+			}
+
+			answer.addElement(resultElement);
+		}
+
+		if (ibatorContext.getPlugins().sqlMapResultMapWithBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

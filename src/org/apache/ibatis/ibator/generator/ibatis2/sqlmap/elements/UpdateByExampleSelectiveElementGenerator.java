@@ -26,57 +26,56 @@ import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
  * @author Jeff Butler
  *
  */
-public class UpdateByExampleSelectiveElementGenerator extends
-        AbstractXmlElementGenerator {
+public class UpdateByExampleSelectiveElementGenerator extends AbstractXmlElementGenerator {
 
-    public UpdateByExampleSelectiveElementGenerator() {
-        super();
-    }
+	public UpdateByExampleSelectiveElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id",  introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 
-        sb.append("update "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		sb.append("update "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
-        dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
-        answer.addElement(dynamicElement);
+		XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
+		dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
+		answer.addElement(dynamicElement);
 
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
-            XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
-            isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
-            isNotNullElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty("record."))); //$NON-NLS-1$ //$NON-NLS-2$
-            dynamicElement.addElement(isNotNullElement);
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+			XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
+			isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+			isNotNullElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty("record."))); //$NON-NLS-1$ //$NON-NLS-2$
+			dynamicElement.addElement(isNotNullElement);
 
-            sb.setLength(0);
-            sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
-            
-            isNotNullElement.addElement(new TextElement(sb.toString()));
-        }
+			sb.setLength(0);
+			sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
 
-        XmlElement isParameterPresentElement =
-            new XmlElement("isParameterPresent"); //$NON-NLS-1$
-        answer.addElement(isParameterPresentElement);
-        
-        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
-        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
-        isParameterPresentElement.addElement(includeElement);
+			isNotNullElement.addElement(new TextElement(sb.toString()));
+		}
 
-        if (ibatorContext.getPlugins().sqlMapUpdateByExampleSelectiveElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		XmlElement isParameterPresentElement = new XmlElement("isParameterPresent"); //$NON-NLS-1$
+		answer.addElement(isParameterPresentElement);
+
+		XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+		includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+				introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
+		isParameterPresentElement.addElement(includeElement);
+
+		if (ibatorContext.getPlugins().sqlMapUpdateByExampleSelectiveElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

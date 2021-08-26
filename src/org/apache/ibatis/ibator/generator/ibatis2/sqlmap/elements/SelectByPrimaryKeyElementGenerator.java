@@ -29,76 +29,77 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator {
 
-    public SelectByPrimaryKeyElementGenerator() {
-        super();
-    }
+	public SelectByPrimaryKeyElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id",  introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
-        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
-            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
-                    introspectedTable.getResultMapWithBLOBsId()));
-        } else {
-            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
-                    introspectedTable.getBaseResultMapId()));
-        }
-        
-        String parameterType;
-        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            parameterType = introspectedTable.getPrimaryKeyType();
-        } else {
-            // select by primary key, but no primary key class.  Fields
-            // must be in the base record
-            parameterType = introspectedTable.getBaseRecordType();
-        }
-        
-        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
-                parameterType));
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
+		if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
+			answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+					introspectedTable.getResultMapWithBLOBsId()));
+		} else {
+			answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+					introspectedTable.getBaseResultMapId()));
+		}
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		String parameterType;
+		if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+			parameterType = introspectedTable.getPrimaryKeyType();
+		} else {
+			// select by primary key, but no primary key class. Fields
+			// must be in the base record
+			parameterType = introspectedTable.getBaseRecordType();
+		}
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select "); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+				parameterType));
 
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
-            sb.append('\'');
-            sb.append(introspectedTable.getSelectByPrimaryKeyQueryId());
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-        }
-        answer.addElement(new TextElement(sb.toString()));
-        answer.addElement(getBaseColumnListElement());
-        if (introspectedTable.hasBLOBColumns()) {
-            answer.addElement(new TextElement(",")); //$NON-NLS-1$
-            answer.addElement(getBlobColumnListElement());
-        }
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("select "); //$NON-NLS-1$
 
-        boolean and = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-            sb.setLength(0);
-            if (and) {
-                sb.append("  and "); //$NON-NLS-1$
-            } else {
-                sb.append("where "); //$NON-NLS-1$
-                and = true;
-            }
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
+			sb.append('\'');
+			sb.append(introspectedTable.getSelectByPrimaryKeyQueryId());
+			sb.append("' as QUERYID,"); //$NON-NLS-1$
+		}
+		answer.addElement(new TextElement(sb.toString()));
+		answer.addElement(getBaseColumnListElement());
+		if (introspectedTable.hasBLOBColumns()) {
+			answer.addElement(new TextElement(",")); //$NON-NLS-1$
+			answer.addElement(getBlobColumnListElement());
+		}
 
-            sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
-            answer.addElement(new TextElement(sb.toString()));
-        }
+		sb.setLength(0);
+		sb.append("from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        if (ibatorContext.getPlugins().sqlMapSelectByPrimaryKeyElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		boolean and = false;
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			sb.setLength(0);
+			if (and) {
+				sb.append("  and "); //$NON-NLS-1$
+			} else {
+				sb.append("where "); //$NON-NLS-1$
+				and = true;
+			}
+
+			sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
+			answer.addElement(new TextElement(sb.toString()));
+		}
+
+		if (ibatorContext.getPlugins().sqlMapSelectByPrimaryKeyElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

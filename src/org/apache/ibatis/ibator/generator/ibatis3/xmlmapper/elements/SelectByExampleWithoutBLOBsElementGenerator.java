@@ -27,55 +27,53 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public SelectByExampleWithoutBLOBsElementGenerator() {
-        super();
-    }
+	public SelectByExampleWithoutBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        String fqjt = introspectedTable.getExampleType();
+	@Override
+	public void addElements(XmlElement parentElement) {
+		String fqjt = introspectedTable.getExampleType();
 
-        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+		XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                introspectedTable.getSelectByExampleStatementId()));
-        answer.addAttribute(new Attribute(
-                "resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "parameterType", fqjt)); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getSelectByExampleStatementId()));
+		answer.addAttribute(new Attribute("resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterType", fqjt)); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        answer.addElement(new TextElement("select")); //$NON-NLS-1$
-        XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
-        ifElement.addAttribute(new Attribute("test", "distinct")); //$NON-NLS-1$ //$NON-NLS-2$
-        ifElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
-        answer.addElement(ifElement);
+		answer.addElement(new TextElement("select")); //$NON-NLS-1$
+		XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
+		ifElement.addAttribute(new Attribute("test", "distinct")); //$NON-NLS-1$ //$NON-NLS-2$
+		ifElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
+		answer.addElement(ifElement);
 
-        StringBuilder sb = new StringBuilder();
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
-            sb.append('\'');
-            sb.append(introspectedTable.getSelectByExampleQueryId());
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-            answer.addElement(new TextElement(sb.toString()));
-        }
-        answer.addElement(getBaseColumnListElement());
+		StringBuilder sb = new StringBuilder();
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
+			sb.append('\'');
+			sb.append(introspectedTable.getSelectByExampleQueryId());
+			sb.append("' as QUERYID,"); //$NON-NLS-1$
+			answer.addElement(new TextElement(sb.toString()));
+		}
+		answer.addElement(getBaseColumnListElement());
 
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement((new TextElement(sb.toString())));
-        answer.addElement(getExampleIncludeElement());
+		sb.setLength(0);
+		sb.append("from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement((new TextElement(sb.toString())));
+		answer.addElement(getExampleIncludeElement());
 
-        ifElement = new XmlElement("if"); //$NON-NLS-1$
-        ifElement
-                .addAttribute(new Attribute("test", "orderByClause != null")); //$NON-NLS-1$ //$NON-NLS-2$
-        ifElement
-                .addElement(new TextElement("order by ${orderByClause}")); //$NON-NLS-1$
-        answer.addElement(ifElement);
+		ifElement = new XmlElement("if"); //$NON-NLS-1$
+		ifElement.addAttribute(new Attribute("test", "orderByClause != null")); //$NON-NLS-1$ //$NON-NLS-2$
+		ifElement.addElement(new TextElement("order by ${orderByClause}")); //$NON-NLS-1$
+		answer.addElement(ifElement);
 
-        if (ibatorContext.getPlugins().sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

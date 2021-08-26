@@ -17,6 +17,7 @@ package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
+import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
@@ -29,71 +30,66 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class ResultMapWithBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
-    public ResultMapWithBLOBsElementGenerator() {
-        super();
-    }
+	public ResultMapWithBLOBsElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        boolean useColumnIndex =
-            StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
+	@Override
+	public void addElements(XmlElement parentElement) {
+		boolean useColumnIndex = StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
 
-        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
+		XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id",  //$NON-NLS-1$
-                introspectedTable.getResultMapWithBLOBsId()));
-        
-        String returnType;
-        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            returnType = introspectedTable.getRecordWithBLOBsType();
-        } else {
-            // table has BLOBs, but no BLOB class - BLOB fields must be
-            // in the base class
-            returnType = introspectedTable.getBaseRecordType();
-        }
-        
-        answer.addAttribute(new Attribute("class", //$NON-NLS-1$
-                returnType));
+		answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+				introspectedTable.getResultMapWithBLOBsId()));
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(introspectedTable.getIbatis2SqlMapNamespace());
-        sb.append('.');
-        sb.append(introspectedTable.getBaseResultMapId());
-        answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
+		String returnType;
+		if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+			returnType = introspectedTable.getRecordWithBLOBsType();
+		} else {
+			// table has BLOBs, but no BLOB class - BLOB fields must be
+			// in the base class
+			returnType = introspectedTable.getBaseRecordType();
+		}
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		answer.addAttribute(new Attribute("class", //$NON-NLS-1$
+				returnType));
 
-        int i = introspectedTable.getNonBLOBColumnCount() + 1;
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
-                || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
-            i++;
-        }
+		StringBuilder sb = new StringBuilder();
+		sb.append(introspectedTable.getIbatis2SqlMapNamespace());
+		sb.append('.');
+		sb.append(introspectedTable.getBaseResultMapId());
+		answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
 
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
-            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
-            
-            if (useColumnIndex) {
-                resultElement.addAttribute(new Attribute(
-                        "columnIndex", Integer.toString(i++))); //$NON-NLS-1$
-            } else {
-                resultElement.addAttribute(new Attribute(
-                    "column", Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
-            }
-            resultElement.addAttribute(new Attribute(
-                    "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute(
-                    "jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-            if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
-                resultElement.addAttribute(new Attribute(
-                        "typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
-            }
+		int i = introspectedTable.getNonBLOBColumnCount() + 1;
+		if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId()) || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
+			i++;
+		}
 
-            answer.addElement(resultElement);
-        }
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
+			XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
-        if (ibatorContext.getPlugins().sqlMapResultMapWithBLOBsElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			if (useColumnIndex) {
+				resultElement.addAttribute(new Attribute("columnIndex", Integer.toString(i++))); //$NON-NLS-1$
+			} else {
+				resultElement.addAttribute(new Attribute("column", Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
+			}
+			resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+			resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
+
+			if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
+				resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$
+			}
+
+			answer.addElement(resultElement);
+		}
+
+		if (ibatorContext.getPlugins().sqlMapResultMapWithBLOBsElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

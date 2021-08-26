@@ -30,114 +30,115 @@ import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
  */
 public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator {
 
-    public InsertSelectiveElementGenerator() {
-        super();
-    }
+	public InsertSelectiveElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", introspectedTable.getInsertSelectiveStatementId())); //$NON-NLS-1$
-        
-        FullyQualifiedJavaType parameterType =
-            introspectedTable.getRules().calculateAllFieldsClass();
-        
-        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
-                parameterType.getFullyQualifiedName()));
+		answer.addAttribute(new Attribute("id", introspectedTable.getInsertSelectiveStatementId())); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		FullyQualifiedJavaType parameterType = introspectedTable.getRules().calculateAllFieldsClass();
 
-        GeneratedKey gk = introspectedTable.getGeneratedKey();
+		answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+				parameterType.getFullyQualifiedName()));
 
-        String sequenceColumn = null;
-        if (gk != null && gk.isBeforeInsert()) {
-            IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
-            // if the column is null, then it's a configuration error. The
-            // warning has already been reported
-            if (introspectedColumn != null) {
-                // pre-generated key
-                answer.addElement(getSelectKey(introspectedColumn, gk));
-                sequenceColumn = gk.getColumn(); 
-            }
-        }
-        
-        StringBuilder sb = new StringBuilder();
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        sb.append("insert into "); //$NON-NLS-1$
-        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
-        
-        XmlElement insertTrimElement = new XmlElement("trim"); //$NON-NLS-1$
-        insertTrimElement.addAttribute(new Attribute("prefix", "(")); //$NON-NLS-1$ //$NON-NLS-2$
-        insertTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
-        insertTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
-        answer.addElement(insertTrimElement);
-        
-        XmlElement valuesTrimElement = new XmlElement("trim"); //$NON-NLS-1$
-        valuesTrimElement.addAttribute(new Attribute("prefix", "values (")); //$NON-NLS-1$ //$NON-NLS-2$
-        valuesTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
-        valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
-        answer.addElement(valuesTrimElement);
-        
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
-            if (introspectedColumn.isIdentity()) {
-                // cannot set values on identity fields
-                continue;
-            }
-            
-            boolean isSequenceColumn = sequenceColumn == null ? false : sequenceColumn.equals(introspectedColumn.getActualColumnName());
-            if (isSequenceColumn) {
-                sb.setLength(0);
-                sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-                sb.append(',');
-                insertTrimElement.addElement(new TextElement(sb.toString()));
-                
-                sb.setLength(0);
-                sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
-                sb.append(',');
-                valuesTrimElement.addElement(new TextElement(sb.toString()));
-                
-                continue;
-            }
-            
-            XmlElement insertNotNullElement = new XmlElement("if"); //$NON-NLS-1$
-            sb.setLength(0);
-            sb.append(introspectedColumn.getJavaProperty());
-            sb.append(" != null"); //$NON-NLS-1$
-            insertNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
+		GeneratedKey gk = introspectedTable.getGeneratedKey();
 
-            sb.setLength(0);
-            sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(',');
-            insertNotNullElement.addElement(new TextElement(sb.toString()));
-            insertTrimElement.addElement(insertNotNullElement);
-            
-            XmlElement valuesNotNullElement = new XmlElement("if"); //$NON-NLS-1$
-            sb.setLength(0);
-            sb.append(introspectedColumn.getJavaProperty());
-            sb.append(" != null"); //$NON-NLS-1$
-            valuesNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
-            
-            sb.setLength(0);
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
-            sb.append(',');
-            valuesNotNullElement.addElement(new TextElement(sb.toString()));
-            valuesTrimElement.addElement(valuesNotNullElement);
-        }
-        
-        if (gk != null && !gk.isBeforeInsert()) {
-            IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
-            // if the column is null, then it's a configuration error. The
-            // warning has already been reported
-            if (introspectedColumn != null) {
-                // pre-generated key
-                answer.addElement(getSelectKey(introspectedColumn, gk));
-            }
-        }
+		String sequenceColumn = null;
+		if (gk != null && gk.isBeforeInsert()) {
+			IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
+			// if the column is null, then it's a configuration error. The
+			// warning has already been reported
+			if (introspectedColumn != null) {
+				// pre-generated key
+				answer.addElement(getSelectKey(introspectedColumn, gk));
+				sequenceColumn = gk.getColumn();
+			}
+		}
 
-        if (ibatorContext.getPlugins().sqlMapInsertSelectiveElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("insert into "); //$NON-NLS-1$
+		sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
+
+		XmlElement insertTrimElement = new XmlElement("trim"); //$NON-NLS-1$
+		insertTrimElement.addAttribute(new Attribute("prefix", "(")); //$NON-NLS-1$ //$NON-NLS-2$
+		insertTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+		insertTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+		answer.addElement(insertTrimElement);
+
+		XmlElement valuesTrimElement = new XmlElement("trim"); //$NON-NLS-1$
+		valuesTrimElement.addAttribute(new Attribute("prefix", "values (")); //$NON-NLS-1$ //$NON-NLS-2$
+		valuesTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+		valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+		answer.addElement(valuesTrimElement);
+
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+			if (introspectedColumn.isIdentity()) {
+				// cannot set values on identity fields
+				continue;
+			}
+
+			boolean isSequenceColumn = sequenceColumn == null ? false : sequenceColumn.equals(introspectedColumn.getActualColumnName());
+			if (isSequenceColumn) {
+				sb.setLength(0);
+				sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+				sb.append(',');
+				insertTrimElement.addElement(new TextElement(sb.toString()));
+
+				sb.setLength(0);
+				sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
+				sb.append(',');
+				valuesTrimElement.addElement(new TextElement(sb.toString()));
+
+				continue;
+			}
+
+			XmlElement insertNotNullElement = new XmlElement("if"); //$NON-NLS-1$
+			sb.setLength(0);
+			sb.append(introspectedColumn.getJavaProperty());
+			sb.append(" != null"); //$NON-NLS-1$
+			insertNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
+
+			sb.setLength(0);
+			sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+			sb.append(',');
+			insertNotNullElement.addElement(new TextElement(sb.toString()));
+			insertTrimElement.addElement(insertNotNullElement);
+
+			XmlElement valuesNotNullElement = new XmlElement("if"); //$NON-NLS-1$
+			sb.setLength(0);
+			sb.append(introspectedColumn.getJavaProperty());
+			sb.append(" != null"); //$NON-NLS-1$
+			valuesNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
+
+			sb.setLength(0);
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
+			sb.append(',');
+			valuesNotNullElement.addElement(new TextElement(sb.toString()));
+			valuesTrimElement.addElement(valuesNotNullElement);
+		}
+
+		if (gk != null && !gk.isBeforeInsert()) {
+			IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
+			// if the column is null, then it's a configuration error. The
+			// warning has already been reported
+			if (introspectedColumn != null) {
+				// pre-generated key
+				answer.addElement(getSelectKey(introspectedColumn, gk));
+			}
+		}
+
+		if (ibatorContext.getPlugins().sqlMapInsertSelectiveElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

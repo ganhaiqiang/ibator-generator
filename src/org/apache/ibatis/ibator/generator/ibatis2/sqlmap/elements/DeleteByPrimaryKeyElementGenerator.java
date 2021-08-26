@@ -28,50 +28,51 @@ import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
  */
 public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator {
 
-    public DeleteByPrimaryKeyElementGenerator() {
-        super();
-    }
+	public DeleteByPrimaryKeyElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id",  introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
-        String parameterClass;
-        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            parameterClass = introspectedTable.getPrimaryKeyType();
-        } else {
-            parameterClass = introspectedTable.getBaseRecordType();
-        }
-        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
-                parameterClass));
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
+		String parameterClass;
+		if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+			parameterClass = introspectedTable.getPrimaryKeyType();
+		} else {
+			parameterClass = introspectedTable.getBaseRecordType();
+		}
+		answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+				parameterClass));
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("delete from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        boolean and = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-            sb.setLength(0);
-            if (and) {
-                sb.append("  and "); //$NON-NLS-1$
-            } else {
-                sb.append("where "); //$NON-NLS-1$
-                and = true;
-            }
+		boolean and = false;
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			sb.setLength(0);
+			if (and) {
+				sb.append("  and "); //$NON-NLS-1$
+			} else {
+				sb.append("where "); //$NON-NLS-1$
+				and = true;
+			}
 
-            sb.append(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
-            answer.addElement(new TextElement(sb.toString()));
-        }
+			sb.append(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
+			answer.addElement(new TextElement(sb.toString()));
+		}
 
-        if (ibatorContext.getPlugins().sqlMapDeleteByPrimaryKeyElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapDeleteByPrimaryKeyElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

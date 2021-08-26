@@ -26,31 +26,31 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
  */
 public class DeleteByExampleElementGenerator extends AbstractXmlElementGenerator {
 
-    public DeleteByExampleElementGenerator() {
-        super();
-    }
+	public DeleteByExampleElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        String fqjt = introspectedTable.getExampleType();
+		String fqjt = introspectedTable.getExampleType();
 
-        answer.addAttribute(new Attribute(
-                "id", introspectedTable.getDeleteByExampleStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "parameterType", fqjt)); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getDeleteByExampleStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterType", fqjt)); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
-        answer.addElement(getExampleIncludeElement());
+		StringBuilder sb = new StringBuilder();
+		sb.append("delete from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
+		answer.addElement(getExampleIncludeElement());
 
-        if (ibatorContext.getPlugins().sqlMapDeleteByExampleElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapDeleteByExampleElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

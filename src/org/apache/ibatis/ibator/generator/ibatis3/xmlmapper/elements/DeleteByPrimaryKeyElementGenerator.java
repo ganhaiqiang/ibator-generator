@@ -28,57 +28,57 @@ import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
  */
 public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator {
 
-    public DeleteByPrimaryKeyElementGenerator() {
-        super();
-    }
+	public DeleteByPrimaryKeyElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id", introspectedTable.getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
-        String parameterClass;
-        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            parameterClass = introspectedTable.getPrimaryKeyType();
-        } else {
-            // PK fields are in the base class.  If more than on PK
-            // field, then they are coming in a map.
-            if (introspectedTable.getPrimaryKeyColumns().size() > 1) {
-                parameterClass = "map"; //$NON-NLS-1$
-            } else {
-                parameterClass = introspectedTable.getPrimaryKeyColumns().get(0)
-                    .getFullyQualifiedJavaType().toString();
-            }
-        }
-        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
-                parameterClass));
+		answer.addAttribute(new Attribute("id", introspectedTable.getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
+		String parameterClass;
+		if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+			parameterClass = introspectedTable.getPrimaryKeyType();
+		} else {
+			// PK fields are in the base class. If more than on PK
+			// field, then they are coming in a map.
+			if (introspectedTable.getPrimaryKeyColumns().size() > 1) {
+				parameterClass = "map"; //$NON-NLS-1$
+			} else {
+				parameterClass = introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().toString();
+			}
+		}
+		answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+				parameterClass));
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("delete from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        boolean and = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-            sb.setLength(0);
-            if (and) {
-                sb.append("  and "); //$NON-NLS-1$
-            } else {
-                sb.append("where "); //$NON-NLS-1$
-                and = true;
-            }
+		boolean and = false;
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+			sb.setLength(0);
+			if (and) {
+				sb.append("  and "); //$NON-NLS-1$
+			} else {
+				sb.append("where "); //$NON-NLS-1$
+				and = true;
+			}
 
-            sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
-            answer.addElement(new TextElement(sb.toString()));
-        }
+			sb.append(Ibatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn));
+			answer.addElement(new TextElement(sb.toString()));
+		}
 
-        if (ibatorContext.getPlugins().sqlMapDeleteByPrimaryKeyElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapDeleteByPrimaryKeyElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

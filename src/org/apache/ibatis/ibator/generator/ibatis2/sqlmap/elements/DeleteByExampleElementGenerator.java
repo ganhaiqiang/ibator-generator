@@ -26,39 +26,38 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
  */
 public class DeleteByExampleElementGenerator extends AbstractXmlElementGenerator {
 
-    public DeleteByExampleElementGenerator() {
-        super();
-    }
+	public DeleteByExampleElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        answer
-                .addAttribute(new Attribute(
-                        "id",  introspectedTable.getIbatis2SqlMapNamespace() + "."+introspectedTable.getDeleteByExampleStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + introspectedTable.getDeleteByExampleStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		StringBuilder sb = new StringBuilder();
+		sb.append("delete from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
-        sb.setLength(0);
-        sb.append(introspectedTable.getIbatis2SqlMapNamespace());
-        sb.append('.');
-        sb.append(introspectedTable.getExampleWhereClauseId());
-        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                sb.toString()));
+		XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+		sb.setLength(0);
+		sb.append(introspectedTable.getIbatis2SqlMapNamespace());
+		sb.append('.');
+		sb.append(introspectedTable.getExampleWhereClauseId());
+		includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+				sb.toString()));
 
-        answer.addElement(includeElement);
+		answer.addElement(includeElement);
 
-        if (ibatorContext.getPlugins().sqlMapDeleteByExampleElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapDeleteByExampleElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

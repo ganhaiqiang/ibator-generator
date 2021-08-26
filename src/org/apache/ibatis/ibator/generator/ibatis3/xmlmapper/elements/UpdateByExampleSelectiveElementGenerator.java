@@ -26,53 +26,53 @@ import org.apache.ibatis.ibator.generator.ibatis3.Ibatis3FormattingUtilities;
  * @author Jeff Butler
  *
  */
-public class UpdateByExampleSelectiveElementGenerator extends
-        AbstractXmlElementGenerator {
+public class UpdateByExampleSelectiveElementGenerator extends AbstractXmlElementGenerator {
 
-    public UpdateByExampleSelectiveElementGenerator() {
-        super();
-    }
+	public UpdateByExampleSelectiveElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute(
-                "id", introspectedTable.getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("parameterType", "map")); //$NON-NLS-1$ //$NON-NLS-2$
-        
-        ibatorContext.getCommentGenerator().addComment(answer);
+		answer.addAttribute(new Attribute("parameterType", "map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("update "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        XmlElement dynamicElement = new XmlElement("set"); //$NON-NLS-1$
-        answer.addElement(dynamicElement);
+		StringBuilder sb = new StringBuilder();
+		sb.append("update "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
 
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
-            XmlElement isNotNullElement = new XmlElement("if"); //$NON-NLS-1$
-            sb.setLength(0);
-            sb.append(introspectedColumn.getJavaProperty("record.")); //$NON-NLS-1$
-            sb.append(" != null"); //$NON-NLS-1$
-            isNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
-            dynamicElement.addElement(isNotNullElement);
+		XmlElement dynamicElement = new XmlElement("set"); //$NON-NLS-1$
+		answer.addElement(dynamicElement);
 
-            sb.setLength(0);
-            sb.append(Ibatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
-            sb.append(',');
-            
-            isNotNullElement.addElement(new TextElement(sb.toString()));
-        }
+		for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+			XmlElement isNotNullElement = new XmlElement("if"); //$NON-NLS-1$
+			sb.setLength(0);
+			sb.append(introspectedColumn.getJavaProperty("record.")); //$NON-NLS-1$
+			sb.append(" != null"); //$NON-NLS-1$
+			isNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
+			dynamicElement.addElement(isNotNullElement);
 
-        answer.addElement(getUpdateByExampleIncludeElement());
+			sb.setLength(0);
+			sb.append(Ibatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(Ibatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
+			sb.append(',');
 
-        if (ibatorContext.getPlugins().sqlMapUpdateByExampleSelectiveElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+			isNotNullElement.addElement(new TextElement(sb.toString()));
+		}
+
+		answer.addElement(getUpdateByExampleIncludeElement());
+
+		if (ibatorContext.getPlugins().sqlMapUpdateByExampleSelectiveElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }

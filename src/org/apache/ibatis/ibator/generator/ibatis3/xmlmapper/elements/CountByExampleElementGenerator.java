@@ -26,33 +26,32 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
  */
 public class CountByExampleElementGenerator extends AbstractXmlElementGenerator {
 
-    public CountByExampleElementGenerator() {
-        super();
-    }
+	public CountByExampleElementGenerator() {
+		super();
+	}
 
-    @Override
-    public void addElements(XmlElement parentElement) {
-        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+	@Override
+	public void addElements(XmlElement parentElement) {
+		XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        String fqjt = introspectedTable.getExampleType();
+		String fqjt = introspectedTable.getExampleType();
 
-        answer.addAttribute(new Attribute(
-                "id", introspectedTable.getCountByExampleStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "parameterType", fqjt)); //$NON-NLS-1$
-        answer.addAttribute(new Attribute(
-                "resultType", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
+		answer.addAttribute(new Attribute("id", introspectedTable.getCountByExampleStatementId())); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("parameterType", fqjt)); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("resultType", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        ibatorContext.getCommentGenerator().addComment(answer);
+		ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select count(*) from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement(new TextElement(sb.toString()));
-        answer.addElement(getExampleIncludeElement());
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(*) from "); //$NON-NLS-1$
+		sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+		answer.addElement(new TextElement(sb.toString()));
+		answer.addElement(getExampleIncludeElement());
 
-        if (ibatorContext.getPlugins().sqlMapCountByExampleElementGenerated(answer, introspectedTable)) {
-            parentElement.addElement(answer);
-        }
-    }
+		if (ibatorContext.getPlugins().sqlMapCountByExampleElementGenerated(answer, introspectedTable)) {
+			parentElement.addElement(answer);
+		}
+		// 空一行
+		parentElement.addElement(new TextElement(""));
+	}
 }
