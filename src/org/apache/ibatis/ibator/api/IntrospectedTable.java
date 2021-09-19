@@ -29,6 +29,7 @@ import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.ModelType;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
+import org.apache.ibatis.ibator.config.ServiceGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.TableConfiguration;
 import org.apache.ibatis.ibator.internal.rules.ConditionalModelRules;
@@ -55,6 +56,8 @@ public abstract class IntrospectedTable {
     protected enum InternalAttribute {
         ATTR_DAO_IMPLEMENTATION_TYPE,
         ATTR_DAO_INTERFACE_TYPE,
+        ATTR_SERVICE_IMPLEMENTATION_TYPE,
+        ATTR_SERVICE_INTERFACE_TYPE,
         ATTR_PRIMARY_KEY_TYPE,
         ATTR_BASE_RECORD_TYPE,
         ATTR_RECORD_WITH_BLOBS_TYPE,
@@ -386,6 +389,14 @@ public abstract class IntrospectedTable {
     public String getDAOInterfaceType() {
         return internalAttributes.get(InternalAttribute.ATTR_DAO_INTERFACE_TYPE);
     }
+    
+    public String getServiceImplementationType() {
+    	return internalAttributes.get(InternalAttribute.ATTR_SERVICE_IMPLEMENTATION_TYPE);
+    }
+    
+    public String getServiceInterfaceType() {
+    	return internalAttributes.get(InternalAttribute.ATTR_SERVICE_INTERFACE_TYPE);
+    }
 
     public boolean hasAnyColumns() {
         return primaryKeyColumns.size() > 0
@@ -458,6 +469,7 @@ public abstract class IntrospectedTable {
     
     public void initialize() {
         calculateDAOAttributes();
+        calculateServiceAttributes();
         calculateModelAttributes();
         calculateXmlAttributes();
         
@@ -794,6 +806,25 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
     
+    protected String calculateServiceImplementationPackage() {
+    	ServiceGeneratorConfiguration config = ibatorContext.getServiceGeneratorConfiguration();
+    	if (config == null) {
+    		return null;
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	if (StringUtility.stringHasValue(config.getImplementationPackage())) {
+    		sb.append(config.getImplementationPackage());
+    	} else {
+    		sb.append(config.getTargetPackage());
+    	}
+    	if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+    		sb.append(fullyQualifiedTable.getSubPackage());
+    	}
+    	
+    	return sb.toString();
+    }
+    
     protected String calculateDAOInterfacePackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         if (config == null) {
@@ -807,6 +838,21 @@ public abstract class IntrospectedTable {
         }
         
         return sb.toString();
+    }
+    
+    protected String calculateServiceInterfacePackage() {
+    	ServiceGeneratorConfiguration config = ibatorContext.getServiceGeneratorConfiguration();
+    	if (config == null) {
+    		return null;
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(config.getTargetPackage());
+    	if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+    		sb.append(fullyQualifiedTable.getSubPackage());
+    	}
+    	
+    	return sb.toString();
     }
 
     protected void calculateDAOAttributes() {
@@ -834,6 +880,33 @@ public abstract class IntrospectedTable {
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("Mapper"); //$NON-NLS-1$
         setIbatis3JavaMapperType(sb.toString());
+    }
+    
+    protected void calculateServiceAttributes() {
+    	if (ibatorContext.getServiceGeneratorConfiguration() == null) {
+    		return;
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(calculateServiceImplementationPackage());
+    	sb.append('.');
+    	sb.append(fullyQualifiedTable.getDomainObjectName());
+    	sb.append("ServiceImpl"); //$NON-NLS-1$
+    	setServiceImplementationType(sb.toString());
+    	
+    	sb.setLength(0);
+    	sb.append(calculateServiceInterfacePackage());
+    	sb.append('.');
+    	sb.append(fullyQualifiedTable.getDomainObjectName());
+    	sb.append("Service"); //$NON-NLS-1$
+    	setServiceInterfaceType(sb.toString());
+    	
+    	sb.setLength(0);
+    	sb.append(calculateServiceInterfacePackage());
+    	sb.append('.');
+    	sb.append(fullyQualifiedTable.getDomainObjectName());
+    	sb.append("Mapper"); //$NON-NLS-1$
+    	setIbatis3JavaMapperType(sb.toString());
     }
     
     protected String calculateJavaModelPackage() {
@@ -990,6 +1063,14 @@ public abstract class IntrospectedTable {
 
     public void setDAOInterfaceType(String DAOInterfaceType) {
         internalAttributes.put(InternalAttribute.ATTR_DAO_INTERFACE_TYPE, DAOInterfaceType);
+    }
+    
+    public void setServiceImplementationType(String ServiceImplementationType) {
+    	internalAttributes.put(InternalAttribute.ATTR_SERVICE_IMPLEMENTATION_TYPE, ServiceImplementationType);
+    }
+    
+    public void setServiceInterfaceType(String ServiceInterfaceType) {
+    	internalAttributes.put(InternalAttribute.ATTR_SERVICE_INTERFACE_TYPE, ServiceInterfaceType);
     }
 
     public void setPrimaryKeyType(String primaryKeyType) {

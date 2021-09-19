@@ -156,48 +156,48 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				&& "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				// 增加开始处
-				// 增加oracleStart、oracleEnd、mysqlOffset、mysqlLength
-				// add field, getter, setter for oracleStart clause
+				// 增加firstResult、lastResult、mysqlOffset、mysqlLength
+				// add field, getter, setter for firstResult clause
 				Field field = new Field();
 				field.setVisibility(JavaVisibility.PRIVATE);
 				field.setType(FullyQualifiedJavaType.getInteger());
-				field.setName("oracleStart"); //$NON-NLS-1$
+				field.setName("firstResult"); //$NON-NLS-1$
 				topLevelClass.addField(field);
 
 				Method method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
-				method.setName("setOracleStart"); //$NON-NLS-1$
+				method.setName("setFirstResult"); //$NON-NLS-1$
 				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "oracleStart")); //$NON-NLS-1$
-				method.addBodyLine("this.oracleStart = oracleStart;"); //$NON-NLS-1$
+						.getInteger(), "firstResult")); //$NON-NLS-1$
+				method.addBodyLine("this.firstResult = firstResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setReturnType(FullyQualifiedJavaType.getInteger());
-				method.setName("getOracleStart"); //$NON-NLS-1$
-				method.addBodyLine("return oracleStart;"); //$NON-NLS-1$
+				method.setName("getFirstResult"); //$NON-NLS-1$
+				method.addBodyLine("return firstResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
-				// add field, getter, setter for oracleEnd clause
+				// add field, getter, setter for lastResult clause
 				field = new Field();
 				field.setVisibility(JavaVisibility.PRIVATE);
 				field.setType(FullyQualifiedJavaType.getInteger());
-				field.setName("oracleEnd"); //$NON-NLS-1$
+				field.setName("lastResult"); //$NON-NLS-1$
 				topLevelClass.addField(field);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
-				method.setName("setOracleEnd"); //$NON-NLS-1$
+				method.setName("setLastResult"); //$NON-NLS-1$
 				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "oracleEnd")); //$NON-NLS-1$
-				method.addBodyLine("this.oracleEnd = oracleEnd;"); //$NON-NLS-1$
+						.getInteger(), "lastResult")); //$NON-NLS-1$
+				method.addBodyLine("this.lastResult = lastResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setReturnType(FullyQualifiedJavaType.getInteger());
-				method.setName("getOracleEnd"); //$NON-NLS-1$
-				method.addBodyLine("return oracleEnd;"); //$NON-NLS-1$
+				method.setName("getLastResult"); //$NON-NLS-1$
+				method.addBodyLine("return lastResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {

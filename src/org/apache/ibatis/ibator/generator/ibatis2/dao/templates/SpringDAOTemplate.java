@@ -42,22 +42,22 @@ public class SpringDAOTemplate extends AbstractDAOTemplate {
 
     @Override
     protected void configureDeleteMethodTemplate() {
-        setDeleteMethodTemplate("getSqlMapClientTemplate().delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setDeleteMethodTemplate("sqlMapClientTemplate.delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 
     @Override
     protected void configureInsertMethodTemplate() {
-        setInsertMethodTemplate("getSqlMapClientTemplate().insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setInsertMethodTemplate("sqlMapClientTemplate.insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 
     @Override
     protected void configureQueryForListMethodTemplate() {
-        setQueryForListMethodTemplate("getSqlMapClientTemplate().queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForListMethodTemplate("sqlMapClientTemplate.queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 
     @Override
     protected void configureQueryForObjectMethodTemplate() {
-        setQueryForObjectMethodTemplate("getSqlMapClientTemplate().queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForObjectMethodTemplate("sqlMapClientTemplate.queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 
     @Override
@@ -68,6 +68,6 @@ public class SpringDAOTemplate extends AbstractDAOTemplate {
 
     @Override
     protected void configureUpdateMethodTemplate() {
-        setUpdateMethodTemplate("getSqlMapClientTemplate().update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setUpdateMethodTemplate("sqlMapClientTemplate.update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 }

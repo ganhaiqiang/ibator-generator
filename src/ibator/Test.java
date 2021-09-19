@@ -2,6 +2,8 @@ package ibator;
 
 import java.util.Date;
 
+import org.apache.ibatis.ibator.util.ClassNameUtils;
+
 /**
  *
  *
@@ -11,20 +13,7 @@ import java.util.Date;
 public class Test {
 
 	public static void main(String[] args) {
-		Man man = new Man();
-		man.setHeight(112.33);
-		man.setSex("0");
-		User user = new User();
-		user.setMan(man);
-		user.setAge(null);
-		user.setCard(123232);
-		user.setId(9l);
-		user.setBrithday(new Date());
-		user.setUsername("=");
-		user.setPre(23.4);
-		user.setMoney(11111);
-		user.setPassword("****");
-		System.out.println(user);
-		System.out.println(user.toString());
+		
+		System.out.println(ClassNameUtils.captureName("Student"));
 	}
 }

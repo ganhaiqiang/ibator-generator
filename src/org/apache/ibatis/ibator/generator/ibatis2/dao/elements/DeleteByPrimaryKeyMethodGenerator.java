@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
+import org.apache.ibatis.ibator.util.ClassNameUtils;
 
 /**
  * 
@@ -34,95 +35,93 @@ import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
  */
 public class DeleteByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerator {
 
-    public DeleteByPrimaryKeyMethodGenerator() {
-        super();
-    }
+	public DeleteByPrimaryKeyMethodGenerator() {
+		super();
+	}
 
-    @Override
-    public void addImplementationElements(TopLevelClass topLevelClass) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = getMethodShell(importedTypes);
+	@Override
+	public void addImplementationElements(TopLevelClass topLevelClass) {
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+		Method method = getMethodShell(importedTypes);
 
-        StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 
-        if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
-            // no primary key class, but primary key is enabled. Primary
-            // key columns must be in the base class.
-            FullyQualifiedJavaType keyType =
-                new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
-            topLevelClass.addImportedType(keyType);
+		String typeName = "";
 
-            sb.setLength(0);
-            sb.append(keyType.getShortName());
-            sb.append(" _key = new "); //$NON-NLS-1$
-            sb.append(keyType.getShortName());
-            sb.append("();"); //$NON-NLS-1$
-            method.addBodyLine(sb.toString());
+		if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
+			// no primary key class, but primary key is enabled. Primary
+			// key columns must be in the base class.
+			FullyQualifiedJavaType keyType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
+			topLevelClass.addImportedType(keyType);
 
-            for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-                sb.setLength(0);
-                sb.append("_key."); //$NON-NLS-1$
-                sb.append(JavaBeansUtil.getSetterMethodName(introspectedColumn
-                        .getJavaProperty()));
-                sb.append('(');
-                sb.append(introspectedColumn.getJavaProperty());
-                sb.append(");"); //$NON-NLS-1$
-                method.addBodyLine(sb.toString());
-            }
-        }
+			typeName = ClassNameUtils.captureName(keyType.getShortName());
 
-        sb.setLength(0);
-        sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getDeleteMethod(introspectedTable.getIbatis2SqlMapNamespace(),
-                introspectedTable.getDeleteByPrimaryKeyStatementId(), "_key")); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        method.addBodyLine("return rows;"); //$NON-NLS-1$
+			sb.setLength(0);
+			sb.append(keyType.getShortName());
+			sb.append(" " + typeName + " = new "); //$NON-NLS-1$
+			sb.append(keyType.getShortName());
+			sb.append("();"); //$NON-NLS-1$
+			method.addBodyLine(sb.toString());
 
-        if (ibatorContext.getPlugins().daoDeleteByPrimaryKeyMethodGenerated(method, topLevelClass, introspectedTable)) {
-            topLevelClass.addImportedTypes(importedTypes);
-            topLevelClass.addMethod(method);
-        }
-    }
+			for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+				sb.setLength(0);
+				sb.append(typeName + "."); //$NON-NLS-1$
+				sb.append(JavaBeansUtil.getSetterMethodName(introspectedColumn.getJavaProperty()));
+				sb.append('(');
+				sb.append(introspectedColumn.getJavaProperty());
+				sb.append(");"); //$NON-NLS-1$
+				method.addBodyLine(sb.toString());
+			}
+		}
 
-    @Override
-    public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = getMethodShell(importedTypes);
-        
-        if (ibatorContext.getPlugins().daoDeleteByPrimaryKeyMethodGenerated(method, interfaze, introspectedTable)) {
-            interfaze.addImportedTypes(importedTypes);
-            interfaze.addMethod(method);
-        }
-    }
+		sb.setLength(0);
+		sb.append("int rows = "); //$NON-NLS-1$
+		sb.append(daoTemplate.getDeleteMethod(introspectedTable.getIbatis2SqlMapNamespace(), introspectedTable.getDeleteByPrimaryKeyStatementId(), typeName)); // $NON-NLS-1$
+		method.addBodyLine(sb.toString());
+		method.addBodyLine("return rows;"); //$NON-NLS-1$
 
-    private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(getDAOMethodNameCalculator()
-                .getDeleteByPrimaryKeyMethodName(introspectedTable));
+		if (ibatorContext.getPlugins().daoDeleteByPrimaryKeyMethodGenerated(method, topLevelClass, introspectedTable)) {
+			topLevelClass.addImportedTypes(importedTypes);
+			topLevelClass.addMethod(method);
+		}
+	}
 
-        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
-            importedTypes.add(type);
-            method.addParameter(new Parameter(type, "_key")); //$NON-NLS-1$
-        } else {
-            for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-                FullyQualifiedJavaType type = introspectedColumn
-                        .getFullyQualifiedJavaType();
-                importedTypes.add(type);
-                method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
-            }
-        }
+	@Override
+	public void addInterfaceElements(Interface interfaze) {
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+		Method method = getMethodShell(importedTypes);
 
-        for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
-            method.addException(fqjt);
-            importedTypes.add(fqjt);
-        }
+		if (ibatorContext.getPlugins().daoDeleteByPrimaryKeyMethodGenerated(method, interfaze, introspectedTable)) {
+			interfaze.addImportedTypes(importedTypes);
+			interfaze.addMethod(method);
+		}
+	}
 
-        ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable);
+	private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+		method.setName(getDAOMethodNameCalculator().getDeleteByPrimaryKeyMethodName(introspectedTable));
 
-        return method;
-    }
+		if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+			FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
+			importedTypes.add(type);
+			method.addParameter(new Parameter(type, ClassNameUtils.captureName(type.getShortName()))); // $NON-NLS-1$
+		} else {
+			for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+				FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
+				importedTypes.add(type);
+				method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
+			}
+		}
+
+		for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
+			method.addException(fqjt);
+			importedTypes.add(fqjt);
+		}
+
+		ibatorContext.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
+
+		return method;
+	}
 }

@@ -51,7 +51,7 @@
   tables.
 -->
 <!ELEMENT ibatorContext (property*, ibatorPlugin*, commentGenerator?, jdbcConnection, javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator, daoGenerator?, table+)>
+                         javaModelGenerator, sqlMapGenerator, daoGenerator?, serviceGenerator?, table+)>
 <!ATTLIST ibatorContext id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -132,6 +132,12 @@
 <!ELEMENT daoGenerator (property*)>
 <!ATTLIST daoGenerator
   type CDATA #REQUIRED
+  targetPackage CDATA #REQUIRED
+  targetProject CDATA #REQUIRED
+  implementationPackage CDATA #IMPLIED>
+  
+<!ELEMENT serviceGenerator (property*)>
+<!ATTLIST serviceGenerator
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED
   implementationPackage CDATA #IMPLIED>

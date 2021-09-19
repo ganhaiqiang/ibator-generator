@@ -39,9 +39,9 @@ public class OraclePaginationHeadGenerator extends AbstractXmlElementGenerator {
 
 		XmlElement dynamicElement = new XmlElement("dynamic");
 		XmlElement outerisNotEmptyElement = new XmlElement("isNotEmpty");
-		outerisNotEmptyElement.addAttribute(new Attribute("property", "oracleStart"));
+		outerisNotEmptyElement.addAttribute(new Attribute("property", "firstResult"));
 		XmlElement innerisNotEmptyElement = new XmlElement("isNotEmpty");
-		innerisNotEmptyElement.addAttribute(new Attribute("property", "oracleEnd"));
+		innerisNotEmptyElement.addAttribute(new Attribute("property", "lastResult"));
 		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[select * from ( select row_.*, rownum rownum_ from ( ]]>"));
 		outerisNotEmptyElement.addElement(innerisNotEmptyElement);
 		dynamicElement.addElement(outerisNotEmptyElement);

@@ -39,10 +39,10 @@ public class OraclePaginationTailGenerator extends AbstractXmlElementGenerator {
 
 		XmlElement dynamicElement = new XmlElement("dynamic");
 		XmlElement outerisNotEmptyElement = new XmlElement("isNotEmpty");
-		outerisNotEmptyElement.addAttribute(new Attribute("property", "oracleStart"));
+		outerisNotEmptyElement.addAttribute(new Attribute("property", "firstResult"));
 		XmlElement innerisNotEmptyElement = new XmlElement("isNotEmpty");
-		innerisNotEmptyElement.addAttribute(new Attribute("property", "oracleEnd"));
-		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[) row_ where rownum <= #oracleEnd# ) where rownum_ > #oracleStart#]]>"));
+		innerisNotEmptyElement.addAttribute(new Attribute("property", "lastResult"));
+		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[) row_ where rownum <= #lastResult# ) where rownum_ > #firstResult#]]>"));
 		outerisNotEmptyElement.addElement(innerisNotEmptyElement);
 		dynamicElement.addElement(outerisNotEmptyElement);
 		answer.addElement(dynamicElement);
