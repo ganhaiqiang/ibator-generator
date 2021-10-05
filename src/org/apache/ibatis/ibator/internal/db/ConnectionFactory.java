@@ -53,7 +53,7 @@ public class ConnectionFactory {
 		Driver driver = getDriver(config);
 
 		Properties props = new Properties();
-
+		props.setProperty("useInformationSchema", "true");
 		if (StringUtility.stringHasValue(config.getUserId())) {
 			props.setProperty("user", config.getUserId()); //$NON-NLS-1$
 		}

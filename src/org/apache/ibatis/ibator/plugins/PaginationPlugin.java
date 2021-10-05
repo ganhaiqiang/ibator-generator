@@ -24,8 +24,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * <p>
  * 
  * @param boolean enablePagination
- * @param String
- *            databaseType :(mysql or oracle)
+ * @param String  databaseType :(mysql or oracle)
  * @author QQ:34847009
  * @date 2010-10-21 下午09:33:48
  */
@@ -40,38 +39,32 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 		databaseType = properties.getProperty("databaseType");
 		enablePagination = properties.getProperty("enablePagination");
 
-		boolean valid = StringUtility.stringHasValue(databaseType)
-				&& StringUtility.stringHasValue(enablePagination);
+		boolean valid = StringUtility.stringHasValue(databaseType) && StringUtility.stringHasValue(enablePagination);
 
 		return valid;
 	}
 
 	@Override
-	public boolean sqlMapDocumentGenerated(Document document,
-			IntrospectedTable introspectedTable) {
+	public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
 		XmlElement element = document.getRootElement();
-		if (StringUtility.stringHasValue(enablePagination)
-				&& "true".equalsIgnoreCase(enablePagination)) {
+		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				// 增加手写的头sql
 				AbstractXmlElementGenerator oraclePaginationTailGenerator = new OraclePaginationTailGenerator();
 				oraclePaginationTailGenerator.setIbatorContext(ibatorContext);
-				oraclePaginationTailGenerator
-						.setIntrospectedTable(introspectedTable);
+				oraclePaginationTailGenerator.setIntrospectedTable(introspectedTable);
 				oraclePaginationTailGenerator.addElements(element);
 
 				// 增加手写的尾sql
 				AbstractXmlElementGenerator oraclePaginationHeadGenerator = new OraclePaginationHeadGenerator();
 				oraclePaginationHeadGenerator.setIbatorContext(ibatorContext);
-				oraclePaginationHeadGenerator
-						.setIntrospectedTable(introspectedTable);
+				oraclePaginationHeadGenerator.setIntrospectedTable(introspectedTable);
 				oraclePaginationHeadGenerator.addElements(element);
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {
 				// 增加mysql
 				AbstractXmlElementGenerator mysqlPaginationLimitGenerator = new MysqlPaginationLimitGenerator();
 				mysqlPaginationLimitGenerator.setIbatorContext(ibatorContext);
-				mysqlPaginationLimitGenerator
-						.setIntrospectedTable(introspectedTable);
+				mysqlPaginationLimitGenerator.setIntrospectedTable(introspectedTable);
 				mysqlPaginationLimitGenerator.addElements(element);
 			}
 		}
@@ -80,80 +73,56 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 	}
 
 	@Override
-	public boolean sqlMapSelectByExampleWithBLOBsElementGenerated(
-			XmlElement element, IntrospectedTable introspectedTable) {
-		if (StringUtility.stringHasValue(enablePagination)
-				&& "true".equalsIgnoreCase(enablePagination)) {
+	public boolean sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				XmlElement oracleHeadIncludeElement = new XmlElement("include");
-				oracleHeadIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "oracle_Pagination_Head"));
+				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_head"));
 				// 在第几个地方增加
 				element.addElement(0, oracleHeadIncludeElement);
 
 				XmlElement oracleTailIncludeElement = new XmlElement("include");
-				oracleTailIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "oracle_Pagination_Tail"));
+				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_tail"));
 				// 在最后增加
-				element.addElement(element.getElements().size(),
-						oracleTailIncludeElement);
+				element.addElement(element.getElements().size(), oracleTailIncludeElement);
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {
 				XmlElement mysqlLimitIncludeElement = new XmlElement("include");
-				mysqlLimitIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "mysql_Pagination_Limit"));
+				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit"));
 				// 在最后增加
-				element.addElement(element.getElements().size(),
-						mysqlLimitIncludeElement);
+				element.addElement(element.getElements().size(), mysqlLimitIncludeElement);
 			}
 		}
 
-		return super.sqlMapExampleWhereClauseElementGenerated(element,
-				introspectedTable);
+		return super.sqlMapExampleWhereClauseElementGenerated(element, introspectedTable);
 	}
 
 	@Override
-	public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(
-			XmlElement element, IntrospectedTable introspectedTable) {
-		if (StringUtility.stringHasValue(enablePagination)
-				&& "true".equalsIgnoreCase(enablePagination)) {
+	public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				XmlElement oracleHeadIncludeElement = new XmlElement("include");
-				oracleHeadIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "oracle_Pagination_Head"));
+				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_head"));
 				// 在第一个地方增加
 				element.addElement(0, oracleHeadIncludeElement);
 
 				XmlElement oracleTailIncludeElement = new XmlElement("include");
-				oracleTailIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "oracle_Pagination_Tail"));
+				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_tail"));
 				// 在最后增加
-				element.addElement(element.getElements().size(),
-						oracleTailIncludeElement);
+				element.addElement(element.getElements().size(), oracleTailIncludeElement);
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {
 				XmlElement mysqlLimitIncludeElement = new XmlElement("include");
-				mysqlLimitIncludeElement.addAttribute(new Attribute("refid",
-						introspectedTable.getIbatis2SqlMapNamespace() + "."
-								+ "mysql_Pagination_Limit"));
+				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit"));
 				// 在最后增加
-				element.addElement(element.getElements().size(),
-						mysqlLimitIncludeElement);
+				element.addElement(element.getElements().size(), mysqlLimitIncludeElement);
 			}
 		}
 
-		return super.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element,
-				introspectedTable);
+		return super.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
 	}
 
 	@Override
-	public boolean modelExampleClassGenerated(TopLevelClass topLevelClass,
-			IntrospectedTable introspectedTable) {
-		if (StringUtility.stringHasValue(enablePagination)
-				&& "true".equalsIgnoreCase(enablePagination)) {
+	public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				// 增加开始处
 				// 增加firstResult、lastResult、mysqlOffset、mysqlLength
@@ -167,8 +136,7 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				Method method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setName("setFirstResult"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "firstResult")); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "firstResult")); //$NON-NLS-1$
 				method.addBodyLine("this.firstResult = firstResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
@@ -188,8 +156,7 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setName("setLastResult"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "lastResult")); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "lastResult")); //$NON-NLS-1$
 				method.addBodyLine("this.lastResult = lastResult;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
@@ -211,8 +178,7 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				Method method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setName("setMysqlOffset"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "mysqlOffset")); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "mysqlOffset")); //$NON-NLS-1$
 				method.addBodyLine("this.mysqlOffset = mysqlOffset;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
@@ -232,8 +198,7 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setName("setMysqlLength"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType
-						.getInteger(), "mysqlLength")); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "mysqlLength")); //$NON-NLS-1$
 				method.addBodyLine("this.mysqlLength = mysqlLength;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
@@ -247,8 +212,7 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 			}
 		}
 
-		return super.modelExampleClassGenerated(topLevelClass,
-				introspectedTable);
+		return super.modelExampleClassGenerated(topLevelClass, introspectedTable);
 	}
 
 }

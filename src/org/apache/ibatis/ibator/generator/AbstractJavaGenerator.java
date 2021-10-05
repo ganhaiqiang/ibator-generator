@@ -35,109 +35,98 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  *
  */
 public abstract class AbstractJavaGenerator extends AbstractGenerator {
-    public abstract List<CompilationUnit> getCompilationUnits();
-    
-    public static Method getGetter(Field field) {
-        Method method = new Method();
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(),field.getType()));
-        method.setReturnType(field.getType());
-        method.setVisibility(JavaVisibility.PUBLIC);
-        StringBuilder sb = new StringBuilder();
-        sb.append("return "); //$NON-NLS-1$
-        sb.append(field.getName());
-        sb.append(';');
-        method.addBodyLine(sb.toString());
-        return method;
-    }
+	public abstract List<CompilationUnit> getCompilationUnits();
 
-    public Method getJavaBeansGetter(IntrospectedColumn introspectedColumn) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+	public static Method getGetter(Field field) {
+		Method method = new Method();
+		method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
+		method.setReturnType(field.getType());
+		method.setVisibility(JavaVisibility.PUBLIC);
+		StringBuilder sb = new StringBuilder();
+		sb.append("return "); //$NON-NLS-1$
+		sb.append(field.getName());
+		sb.append(';');
+		method.addBodyLine(sb.toString());
+		return method;
+	}
 
-        Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(fqjt);
-        method.setName(JavaBeansUtil.getGetterMethodName(property, fqjt));
-        ibatorContext.getCommentGenerator().addGetterComment(method,
-                introspectedTable,
-                introspectedColumn);
+	public Method getJavaBeansGetter(IntrospectedColumn introspectedColumn) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("return "); //$NON-NLS-1$
-        sb.append(property);
-        sb.append(';');
-        method.addBodyLine(sb.toString());
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(fqjt);
+		method.setName(JavaBeansUtil.getGetterMethodName(property, fqjt));
+		ibatorContext.getCommentGenerator().addGetterComment(method, introspectedTable, introspectedColumn);
 
-        return method;
-    }
+		StringBuilder sb = new StringBuilder();
+		sb.append("return "); //$NON-NLS-1$
+		sb.append(property);
+		sb.append(';');
+		method.addBodyLine(sb.toString());
 
-    public Field getJavaBeansField(IntrospectedColumn introspectedColumn) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+		return method;
+	}
 
-        Field field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(fqjt);
-        field.setName(property);
-        ibatorContext.getCommentGenerator().addFieldComment(field,
-                introspectedTable,
-                introspectedColumn);
+	public Field getJavaBeansField(IntrospectedColumn introspectedColumn) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
 
-        return field;
-    }
+		Field field = new Field();
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(fqjt);
+		field.setName(property);
+		ibatorContext.getCommentGenerator().addFieldComment(field, introspectedTable, introspectedColumn);
 
-    public Method getJavaBeansSetter(IntrospectedColumn introspectedColumn) {
-        FullyQualifiedJavaType fqjt = introspectedColumn
-                .getFullyQualifiedJavaType();
-        String property = introspectedColumn.getJavaProperty();
+		return field;
+	}
 
-        Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setName(JavaBeansUtil.getSetterMethodName(property));
-        method.addParameter(new Parameter(fqjt, property));
-        ibatorContext.getCommentGenerator().addSetterComment(method,
-                introspectedTable,
-                introspectedColumn);
+	public Method getJavaBeansSetter(IntrospectedColumn introspectedColumn) {
+		FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+		String property = introspectedColumn.getJavaProperty();
 
-        StringBuilder sb = new StringBuilder();
-        if (isTrimStringsEnabled() && introspectedColumn.isStringColumn()) {
-            sb.append("this."); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" == null ? null : "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(".trim();"); //$NON-NLS-1$
-            method.addBodyLine(sb.toString());
-        } else {
-            sb.append("this."); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(';');
-            method.addBodyLine(sb.toString());
-        }
+		Method method = new Method();
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName(JavaBeansUtil.getSetterMethodName(property));
+		method.addParameter(new Parameter(fqjt, property));
+		ibatorContext.getCommentGenerator().addSetterComment(method, introspectedTable, introspectedColumn);
 
-        return method;
-    }
+		StringBuilder sb = new StringBuilder();
+		if (isTrimStringsEnabled() && introspectedColumn.isStringColumn()) {
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" == null ? null : "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(".trim();"); //$NON-NLS-1$
+			method.addBodyLine(sb.toString());
+		} else {
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+		}
 
-    public boolean isTrimStringsEnabled () {
-        Properties properties = ibatorContext.getJavaModelGeneratorConfiguration().getProperties();
-        boolean rc = StringUtility.isTrue(properties
-                .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
-        return rc;
-    }
+		return method;
+	}
 
+	public boolean isTrimStringsEnabled() {
+		Properties properties = ibatorContext.getJavaModelGeneratorConfiguration().getProperties();
+		boolean rc = StringUtility.isTrue(properties.getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
+		return rc;
+	}
 
-    public String getRootClass () {
-        String rootClass = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_CLASS);
-        if (rootClass == null) {
-            Properties properties = ibatorContext.getJavaModelGeneratorConfiguration().getProperties();
-            rootClass = properties.getProperty(PropertyRegistry.ANY_ROOT_CLASS);
-        }
-        
-        return rootClass;
-    }
+	public String getRootClass() {
+		String rootClass = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_CLASS);
+		if (rootClass == null) {
+			Properties properties = ibatorContext.getJavaModelGeneratorConfiguration().getProperties();
+			rootClass = properties.getProperty(PropertyRegistry.ANY_ROOT_CLASS);
+		}
+
+		return rootClass;
+	}
 }

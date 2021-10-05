@@ -57,8 +57,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
 	 * @see DefaultCommentGenerator#addFieldComment(Field, IntrospectedTable,
 	 *      IntrospectedColumn)
 	 */
-	public void addFieldComment(Field field, FullyQualifiedTable table,
-			String columnName) {
+	public void addFieldComment(Field field, FullyQualifiedTable table, String columnName) {
 		StringBuilder sb = new StringBuilder();
 		if (columnName != null && columnName.length() != 0) {
 			field.addJavaDocLine("/**"); //$NON-NLS-1$
@@ -87,11 +86,9 @@ public class DefaultCommentGenerator implements CommentGenerator {
 	 * TODO - remove in release 1.2.3
 	 * 
 	 * @deprecated as of version 1.2.2.
-	 * @see DefaultCommentGenerator#addClassComment(InnerClass,
-	 *      IntrospectedTable)
+	 * @see DefaultCommentGenerator#addClassComment(InnerClass, IntrospectedTable)
 	 */
-	public void addClassComment(InnerClass innerClass,
-			FullyQualifiedTable table, boolean markAsDoNotDelete) {
+	public void addClassComment(InnerClass innerClass, FullyQualifiedTable table, boolean markAsDoNotDelete) {
 	}
 
 	/**
@@ -114,8 +111,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
 	 * @see DefaultCommentGenerator#addGetterComment(Method, IntrospectedTable,
 	 *      IntrospectedColumn)
 	 */
-	public void addGetterComment(Method method, FullyQualifiedTable table,
-			String columnName) {
+	public void addGetterComment(Method method, FullyQualifiedTable table, String columnName) {
 		StringBuilder sb = new StringBuilder();
 		if (columnName != null && columnName.length() != 0) {
 			method.addJavaDocLine("/**");
@@ -136,8 +132,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
 	 * @see DefaultCommentGenerator#addSetterComment(Method, IntrospectedTable,
 	 *      IntrospectedColumn)
 	 */
-	public void addSetterComment(Method method, FullyQualifiedTable table,
-			String columnName) {
+	public void addSetterComment(Method method, FullyQualifiedTable table, String columnName) {
 		StringBuilder sb = new StringBuilder();
 
 		if (columnName != null && columnName.length() != 0) {
@@ -182,27 +177,23 @@ public class DefaultCommentGenerator implements CommentGenerator {
 	public void addConfigurationProperties(Properties properties) {
 		this.properties.putAll(properties);
 
-		suppressDate = StringUtility.isTrue(properties
-				.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
+		suppressDate = StringUtility.isTrue(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
 	}
 
 	/**
-	 * This method adds the custom javadoc tag for ibator. You may do nothing if
-	 * you do not wish to include the Javadoc tag - however, if you do not
-	 * include the Javadoc tag then the Java merge capability of the eclipse
-	 * plugin will break.
+	 * This method adds the custom javadoc tag for ibator. You may do nothing if you
+	 * do not wish to include the Javadoc tag - however, if you do not include the
+	 * Javadoc tag then the Java merge capability of the eclipse plugin will break.
 	 * 
-	 * @param javaElement
-	 *            the java element
+	 * @param javaElement the java element
 	 */
-	protected void addIbatorJavadocTag(JavaElement javaElement,
-			boolean markAsDoNotDelete) {
+	protected void addIbatorJavadocTag(JavaElement javaElement, boolean markAsDoNotDelete) {
 	}
 
 	/**
-	 * This method returns a formated date string to include in the Javadoc tag
-	 * and XML comments. You may return null if you do not want the date in
-	 * these documentation elements.
+	 * This method returns a formated date string to include in the Javadoc tag and
+	 * XML comments. You may return null if you do not want the date in these
+	 * documentation elements.
 	 * 
 	 * @return a string representing the current timestamp, or null
 	 */
@@ -214,51 +205,35 @@ public class DefaultCommentGenerator implements CommentGenerator {
 		}
 	}
 
-	public void addClassComment(InnerClass innerClass,
-			IntrospectedTable introspectedTable) {
-		addClassComment(innerClass, introspectedTable.getFullyQualifiedTable(),
-				false);
+	public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
+		addClassComment(innerClass, introspectedTable.getFullyQualifiedTable(), false);
 	}
 
-	public void addEnumComment(InnerEnum innerEnum,
-			IntrospectedTable introspectedTable) {
+	public void addEnumComment(InnerEnum innerEnum, IntrospectedTable introspectedTable) {
 		addEnumComment(innerEnum, introspectedTable.getFullyQualifiedTable());
 	}
 
-	public void addFieldComment(Field field,
-			IntrospectedTable introspectedTable,
-			IntrospectedColumn introspectedColumn) {
-		addFieldComment(field, introspectedTable.getFullyQualifiedTable(),
-				introspectedColumn.getRemarks());
+	public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+		addFieldComment(field, introspectedTable.getFullyQualifiedTable(), introspectedColumn.getRemarks());
 	}
 
 	public void addFieldComment(Field field, IntrospectedTable introspectedTable) {
 		addFieldComment(field, introspectedTable.getFullyQualifiedTable());
 	}
 
-	public void addGeneralMethodComment(Method method,
-			IntrospectedTable introspectedTable) {
-		addGeneralMethodComment(method,
-				introspectedTable.getFullyQualifiedTable());
+	public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
+		addGeneralMethodComment(method, introspectedTable.getFullyQualifiedTable());
 	}
 
-	public void addGetterComment(Method method,
-			IntrospectedTable introspectedTable,
-			IntrospectedColumn introspectedColumn) {
-		addGetterComment(method, introspectedTable.getFullyQualifiedTable(),
-				introspectedColumn.getRemarks());
+	public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+		addGetterComment(method, introspectedTable.getFullyQualifiedTable(), introspectedColumn.getRemarks());
 	}
 
-	public void addSetterComment(Method method,
-			IntrospectedTable introspectedTable,
-			IntrospectedColumn introspectedColumn) {
-		addSetterComment(method, introspectedTable.getFullyQualifiedTable(),
-				introspectedColumn.getRemarks());
+	public void addSetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+		addSetterComment(method, introspectedTable.getFullyQualifiedTable(), introspectedColumn.getRemarks());
 	}
 
-	public void addClassComment(InnerClass innerClass,
-			IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
-		addClassComment(innerClass, introspectedTable.getFullyQualifiedTable(),
-				markAsDoNotDelete);
+	public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
+		addClassComment(innerClass, introspectedTable.getFullyQualifiedTable(), markAsDoNotDelete);
 	}
 }

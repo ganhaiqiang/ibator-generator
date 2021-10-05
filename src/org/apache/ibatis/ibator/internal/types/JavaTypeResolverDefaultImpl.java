@@ -79,8 +79,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 				new FullyQualifiedJavaType(Integer.class.getName())));
 		typeMap.put(Types.JAVA_OBJECT, new JdbcTypeInformation("JAVA_OBJECT", //$NON-NLS-1$
 				new FullyQualifiedJavaType(Object.class.getName())));
-		typeMap.put(Types.LONGVARBINARY, new JdbcTypeInformation(
-				"LONGVARBINARY", //$NON-NLS-1$
+		typeMap.put(Types.LONGVARBINARY, new JdbcTypeInformation("LONGVARBINARY", //$NON-NLS-1$
 				new FullyQualifiedJavaType("byte[]"))); //$NON-NLS-1$
 		typeMap.put(Types.LONGVARCHAR, new JdbcTypeInformation("LONGVARCHAR", //$NON-NLS-1$
 				new FullyQualifiedJavaType(String.class.getName())));
@@ -110,34 +109,26 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 	public void addConfigurationProperties(Properties properties) {
 		this.properties.putAll(properties);
-		forceBigDecimals = StringUtility
-				.isTrue(properties
-						.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
+		forceBigDecimals = StringUtility.isTrue(properties.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType
+	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType
 	 * (org.apache.ibatis.ibator.internal.db.ColumnDefinition)
 	 */
-	public FullyQualifiedJavaType calculateJavaType(
-			IntrospectedColumn introspectedColumn) {
+	public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
 		FullyQualifiedJavaType answer;
-		JdbcTypeInformation jdbcTypeInformation = typeMap
-				.get(introspectedColumn.getJdbcType());
+		JdbcTypeInformation jdbcTypeInformation = typeMap.get(introspectedColumn.getJdbcType());
 
 		if (jdbcTypeInformation == null) {
 			switch (introspectedColumn.getJdbcType()) {
 			case Types.DECIMAL:
 			case Types.NUMERIC:
-				if (introspectedColumn.getScale() == 0
-						&& introspectedColumn.getLength() == 22) {
+				if (introspectedColumn.getScale() == 0 && introspectedColumn.getLength() == 22) {
 					answer = new FullyQualifiedJavaType(Integer.class.getName());
-				} else if (introspectedColumn.getScale() > 0
-						|| introspectedColumn.getLength() > 18
-						|| forceBigDecimals) {
+				} else if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
 					answer = new FullyQualifiedJavaType(Double.class.getName());
 				} else if (introspectedColumn.getLength() > 9) {
 					answer = new FullyQualifiedJavaType(Long.class.getName());
@@ -163,14 +154,12 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.apache.ibatis.ibator.api.JavaTypeResolver#calculateJdbcTypeName(org
+	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#calculateJdbcTypeName(org
 	 * .apache.ibatis.ibator.api.IntrospectedColumn)
 	 */
 	public String calculateJdbcTypeName(IntrospectedColumn introspectedColumn) {
 		String answer;
-		JdbcTypeInformation jdbcTypeInformation = typeMap
-				.get(introspectedColumn.getJdbcType());
+		JdbcTypeInformation jdbcTypeInformation = typeMap.get(introspectedColumn.getJdbcType());
 
 		if (jdbcTypeInformation == null) {
 			switch (introspectedColumn.getJdbcType()) {
@@ -210,8 +199,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 		private FullyQualifiedJavaType fullyQualifiedJavaType;
 
-		public JdbcTypeInformation(String jdbcTypeName,
-				FullyQualifiedJavaType fullyQualifiedJavaType) {
+		public JdbcTypeInformation(String jdbcTypeName, FullyQualifiedJavaType fullyQualifiedJavaType) {
 			this.jdbcTypeName = jdbcTypeName;
 			this.fullyQualifiedJavaType = fullyQualifiedJavaType;
 		}

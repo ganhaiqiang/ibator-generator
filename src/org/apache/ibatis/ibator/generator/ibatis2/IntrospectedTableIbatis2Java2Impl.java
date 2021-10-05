@@ -31,13 +31,11 @@ import org.apache.ibatis.ibator.generator.ibatis2.dao.DAOGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.GenericCIDAOTemplate;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.GenericSIDAOTemplate;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.IbatisDAOTemplate;
-import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.ServiceTemplate;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.SpringDAOTemplate;
 import org.apache.ibatis.ibator.generator.ibatis2.model.BaseRecordGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.model.ExampleGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.model.PrimaryKeyGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.model.RecordWithBLOBsGenerator;
-import org.apache.ibatis.ibator.generator.ibatis2.service.ServiceGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.SqlMapGenerator;
 import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 
@@ -49,21 +47,18 @@ import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
     protected List<AbstractJavaGenerator> javaModelGenerators;
     protected List<AbstractJavaGenerator> daoGenerators;
-    protected List<AbstractJavaGenerator> serviceGenerators;
     protected AbstractXmlGenerator sqlMapGenerator;
 
     public IntrospectedTableIbatis2Java2Impl() {
         super(TargetRuntime.IBATIS2);
         javaModelGenerators = new ArrayList<AbstractJavaGenerator>();
         daoGenerators = new ArrayList<AbstractJavaGenerator>();
-        serviceGenerators = new ArrayList<AbstractJavaGenerator>();
     }
 
     @Override
     public void calculateGenerators(List<String> warnings, ProgressCallback progressCallback) {
         calculateJavaModelGenerators(warnings, progressCallback);
         calculateDAOGenerators(warnings, progressCallback);
-        calculateServiceGenerators(warnings, progressCallback);
         calculateSqlMapGenerator(warnings, progressCallback);
     }
     
@@ -94,17 +89,6 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
 
         initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
         daoGenerators.add(javaGenerator);
-    }
-    
-    protected void calculateServiceGenerators(List<String> warnings, ProgressCallback progressCallback) {
-    	if (ibatorContext.getServiceGeneratorConfiguration() == null) {
-    		return;
-    	}
-    	
-    	AbstractJavaGenerator javaGenerator=new ServiceGenerator(new ServiceTemplate(), isJava5Targeted());
-    	
-    	initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
-    	serviceGenerators.add(javaGenerator);
     }
     
     protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
@@ -159,15 +143,6 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
                 answer.add(gjf);
             }
         }
-        
-        for (AbstractJavaGenerator javaGenerator : serviceGenerators) {
-        	List<CompilationUnit> compilationUnits = javaGenerator.getCompilationUnits();
-        	for (CompilationUnit compilationUnit : compilationUnits) {
-        		GeneratedJavaFile gjf = new GeneratedJavaFile(compilationUnit, ibatorContext.getServiceGeneratorConfiguration().getTargetProject());
-        		answer.add(gjf);
-        	}
-        }
-        
         return answer;
     }
 
@@ -197,7 +172,6 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
     public int getGenerationSteps() {
         return javaModelGenerators.size()
             + daoGenerators.size()
-            + serviceGenerators.size()
             + 1;  // 1 for the sqlMapGenerator
     }
 }

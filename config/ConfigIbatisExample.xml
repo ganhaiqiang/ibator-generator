@@ -17,12 +17,34 @@
 			<!-- mysql or oracle -->
 			<property name="databaseType" value="mysql" />
 		</ibatorPlugin>
+		
 		<!-- 重命名example类 -->
 <!-- 		<ibatorPlugin type="org.apache.ibatis.ibator.plugins.RenameExampleClassPlugin"> -->
 <!-- 			<property name="searchString" value="Example$" /> -->
 <!-- 			<property name="replaceString" value="Criteria" /> -->
 <!-- 		</ibatorPlugin> -->
-		<!-- 产生sqlmap.xml <ibatorPlugin type="org.apache.ibatis.ibator.plugins.SqlMapConfigPlugin"> <property name="targetPackage" value="ibatortest.generated.flat" /> <property name="targetProject" value="src" /> </ibatorPlugin> -->
+
+		<ibatorPlugin type="org.apache.ibatis.ibator.plugins.FilePlugin">
+			<property name="targetProject" value="src"/>
+			<property name="targetPackage" value="com.demo.service"/>
+			<property name="templatePath" value="template/service.ftl"/>
+			<property name="mapperSuffix" value="Service"/>
+			<property name="fileName" value="${tableClass.shortClassName}${mapperSuffix}.java"/>
+		</ibatorPlugin>
+
+		<ibatorPlugin type="org.apache.ibatis.ibator.plugins.FilePlugin">
+			<property name="targetProject" value="src"/>
+			<property name="targetPackage" value="com.demo.service"/>
+			<property name="templatePath" value="template/serviceImpl.ftl"/>
+			<property name="mapperSuffix" value="ServiceImpl"/>
+			<property name="fileName" value="${tableClass.shortClassName}${mapperSuffix}.java"/>
+		</ibatorPlugin>
+
+		<!-- 产生sqlmap.xml  -->
+		<ibatorPlugin type="org.apache.ibatis.ibator.plugins.SqlMapConfigPlugin"> 
+			<property name="targetPackage" value="config" /> 
+			<property name="targetProject" value="src" /> 
+		</ibatorPlugin>
 
 		<!-- driverClass="com.mysql.jdbc.Driver" -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8" userId="root" password="root">
@@ -44,18 +66,12 @@
 			<!-- <property name="enableSubPackages" value="true" /> -->
 		</daoGenerator>
 
-		<serviceGenerator targetPackage="com.demo.service" implementationPackage="com.demo.service.impl" targetProject="src">
+		<serviceGenerator targetPackage="com.demo.service" implementationPackage="com.demo.service" targetProject="src">
 			<!-- <property name="enableSubPackages" value="true" /> -->
 		</serviceGenerator>
 
 		<!-- 如果数据库里面有多个相同表名在不同的schema下，那么你得加上: schema="XXXX"和<property name="ignoreQualifiersAtRuntime" value="true" /> 不然ibator会以找到的最后一个为最终对象，这个问题苦恼了我很久，后来才发现 -->
 		<table tableName="student" schema="test">
-			<!-- 忽略schema，避免在xml中出现schema.表名 -->
-			<property name="ignoreQualifiersAtRuntime" value="true" />
-			<!-- 精确到时分秒时，需要设置下： jdbcType="TIMESTAMP" -->
-<!-- 			<columnOverride column="hiredate" jdbcType="TIMESTAMP" /> -->
-		</table>
-		<table tableName="login_user_info" schema="test">
 			<!-- 忽略schema，避免在xml中出现schema.表名 -->
 			<property name="ignoreQualifiersAtRuntime" value="true" />
 			<!-- 精确到时分秒时，需要设置下： jdbcType="TIMESTAMP" -->

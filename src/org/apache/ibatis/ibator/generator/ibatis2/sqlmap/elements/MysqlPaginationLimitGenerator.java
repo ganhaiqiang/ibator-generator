@@ -33,7 +33,7 @@ public class MysqlPaginationLimitGenerator extends AbstractXmlElementGenerator {
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "mysql_Pagination_Limit")); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit")); //$NON-NLS-1$
 
 		ibatorContext.getCommentGenerator().addComment(answer);
 
