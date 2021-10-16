@@ -74,7 +74,11 @@
 		<table tableName="student" schema="test">
 			<!-- 忽略schema，避免在xml中出现schema.表名 -->
 			<property name="ignoreQualifiersAtRuntime" value="true" />
-<!-- 			<generatedKey column="id" sqlStatement="select uuid()" /> -->
+			<!-- mysql返回自增主键 -->
+			<generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+			<!-- oracle返回自增主键 -->
+<!-- 			<generatedKey column="id" sqlStatement="SELECT SEQ_STUDENT.NEXTVAL FROM DUAL AS id" /> -->
+			<!-- 列名前缀替换 -->
 <!-- 				<columnRenamingRule searchString="^t_" replaceString="" /> -->
 			<!-- 精确到时分秒时，需要设置下： jdbcType="TIMESTAMP" -->
 <!-- 			<columnOverride column="hiredate" jdbcType="TIMESTAMP" /> -->
