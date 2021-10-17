@@ -52,6 +52,11 @@
 			<property name="remarksReporting" value="true" />
 		</jdbcConnection>
 		
+		<!-- 自定义的类型解析器 -->
+		<javaTypeResolver type="org.apache.ibatis.ibator.internal.types.MyJavaTypeResolver">
+			<property name="forceBigDecimals" value="true"/>
+		</javaTypeResolver>
+		
 		<javaModelGenerator targetPackage="com.demo.model" targetProject="src">
 			<!-- 如果为TRUE，下面的设置了schema,那么包名就是会增加个schema名， 如果schema=“aaa” , test.pojo.aaa.XXXX; <property name="enableSubPackages" value="true" /> -->
 			<!-- 继承哪个父类，这个为了有时候日志需要打印整个对象，而采用的apache打印对象的每个属性 -->
@@ -71,7 +76,7 @@
 		</serviceGenerator>
 
 		<!-- 如果数据库里面有多个相同表名在不同的schema下，那么你得加上: schema="XXXX"和<property name="ignoreQualifiersAtRuntime" value="true" /> 不然ibator会以找到的最后一个为最终对象，这个问题苦恼了我很久，后来才发现 -->
-		<table tableName="student" schema="test">
+		<table tableName="t_column_type" schema="test">
 			<!-- 忽略schema，避免在xml中出现schema.表名 -->
 			<property name="ignoreQualifiersAtRuntime" value="true" />
 			<!-- mysql返回自增主键 -->
