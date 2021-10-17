@@ -1,11 +1,17 @@
 package ${package};
 
 import java.util.List;
-<#if tableClass.hasPrimaryKeyColumns && (tableClass.pkFields?? && tableClass.pkFields[0].shortTypeName=='BigDecimal')>import java.math.BigDecimal;</#if>
+<#if tableClass.hasPrimaryKeyColumns && (tableClass.pkFields?? && tableClass.pkFields[0].shortTypeName=='BigDecimal')>
+import java.math.BigDecimal;
+</#if>
 import ${tableClass.fullClassName};
 import ${tableClass.exampleType};
-<#if tableClass.generatePrimaryKeyClass>import ${tableClass.primaryKeyFullClassName};</#if>
-<#if tableClass.hasBLOBColumns>import ${tableClass.fullClassName}WithBLOBs;</#if>
+<#if tableClass.generatePrimaryKeyClass>
+import ${tableClass.primaryKeyFullClassName};
+</#if>
+<#if tableClass.hasBLOBColumns>
+import ${tableClass.fullClassName}WithBLOBs;
+</#if>
 
 /**
  * 通用 Service 代码生成器
