@@ -33,7 +33,7 @@ public class OraclePaginationHeadGenerator extends AbstractXmlElementGenerator {
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_head")); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Head")); //$NON-NLS-1$
 
 		ibatorContext.getCommentGenerator().addComment(answer);
 

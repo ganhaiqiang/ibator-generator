@@ -33,16 +33,16 @@ public class MysqlPaginationLimitGenerator extends AbstractXmlElementGenerator {
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit")); //$NON-NLS-1$
+		answer.addAttribute(new Attribute("id", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Limit")); //$NON-NLS-1$
 
 		ibatorContext.getCommentGenerator().addComment(answer);
 
 		XmlElement dynamicElement = new XmlElement("dynamic");
 		XmlElement outerisNotEmptyElement = new XmlElement("isNotEmpty");
-		outerisNotEmptyElement.addAttribute(new Attribute("property", "mysqlOffset"));
+		outerisNotEmptyElement.addAttribute(new Attribute("property", "offset"));
 		XmlElement innerisNotEmptyElement = new XmlElement("isNotEmpty");
-		innerisNotEmptyElement.addAttribute(new Attribute("property", "mysqlLength"));
-		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[ limit #mysqlOffset# , #mysqlLength# ]]>"));
+		innerisNotEmptyElement.addAttribute(new Attribute("property", "limit"));
+		innerisNotEmptyElement.addElement(new TextElement("<![CDATA[ limit #offset# , #limit# ]]>"));
 		outerisNotEmptyElement.addElement(innerisNotEmptyElement);
 		dynamicElement.addElement(outerisNotEmptyElement);
 		answer.addElement(dynamicElement);

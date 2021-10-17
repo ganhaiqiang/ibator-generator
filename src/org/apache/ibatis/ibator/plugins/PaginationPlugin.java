@@ -77,17 +77,17 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				XmlElement oracleHeadIncludeElement = new XmlElement("include");
-				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_head"));
+				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Head"));
 				// 在第几个地方增加
 				element.addElement(0, oracleHeadIncludeElement);
 
 				XmlElement oracleTailIncludeElement = new XmlElement("include");
-				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_tail"));
+				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Tail"));
 				// 在最后增加
 				element.addElement(element.getElements().size(), oracleTailIncludeElement);
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {
 				XmlElement mysqlLimitIncludeElement = new XmlElement("include");
-				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit"));
+				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Limit"));
 				// 在最后增加
 				element.addElement(element.getElements().size(), mysqlLimitIncludeElement);
 			}
@@ -101,17 +101,17 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 		if (StringUtility.stringHasValue(enablePagination) && "true".equalsIgnoreCase(enablePagination)) {
 			if ("oracle".equalsIgnoreCase(databaseType)) {
 				XmlElement oracleHeadIncludeElement = new XmlElement("include");
-				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_head"));
+				oracleHeadIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Head"));
 				// 在第一个地方增加
 				element.addElement(0, oracleHeadIncludeElement);
 
 				XmlElement oracleTailIncludeElement = new XmlElement("include");
-				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_tail"));
+				oracleTailIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Tail"));
 				// 在最后增加
 				element.addElement(element.getElements().size(), oracleTailIncludeElement);
 			} else if ("mysql".equalsIgnoreCase(databaseType)) {
 				XmlElement mysqlLimitIncludeElement = new XmlElement("include");
-				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "pagination_limit"));
+				mysqlLimitIncludeElement.addAttribute(new Attribute("refid", introspectedTable.getIbatis2SqlMapNamespace() + "." + "Pagination_Limit"));
 				// 在最后增加
 				element.addElement(element.getElements().size(), mysqlLimitIncludeElement);
 			}
@@ -172,41 +172,41 @@ public class PaginationPlugin extends IbatorPluginAdapter {
 				Field field = new Field();
 				field.setVisibility(JavaVisibility.PRIVATE);
 				field.setType(FullyQualifiedJavaType.getInteger());
-				field.setName("mysqlOffset"); //$NON-NLS-1$
+				field.setName("offset"); //$NON-NLS-1$
 				topLevelClass.addField(field);
 
 				Method method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
-				method.setName("setMysqlOffset"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "mysqlOffset")); //$NON-NLS-1$
-				method.addBodyLine("this.mysqlOffset = mysqlOffset;"); //$NON-NLS-1$
+				method.setName("setOffset"); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "offset")); //$NON-NLS-1$
+				method.addBodyLine("this.offset = offset;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setReturnType(FullyQualifiedJavaType.getInteger());
-				method.setName("getMysqlOffset"); //$NON-NLS-1$
-				method.addBodyLine("return mysqlOffset;"); //$NON-NLS-1$
+				method.setName("getOffset"); //$NON-NLS-1$
+				method.addBodyLine("return offset;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 				// add field, getter, setter for mysqlLength clause
 				field = new Field();
 				field.setVisibility(JavaVisibility.PRIVATE);
 				field.setType(FullyQualifiedJavaType.getInteger());
-				field.setName("mysqlLength"); //$NON-NLS-1$
+				field.setName("limit"); //$NON-NLS-1$
 				topLevelClass.addField(field);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
-				method.setName("setMysqlLength"); //$NON-NLS-1$
-				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "mysqlLength")); //$NON-NLS-1$
-				method.addBodyLine("this.mysqlLength = mysqlLength;"); //$NON-NLS-1$
+				method.setName("setLimit"); //$NON-NLS-1$
+				method.addParameter(new Parameter(FullyQualifiedJavaType.getInteger(), "limit")); //$NON-NLS-1$
+				method.addBodyLine("this.limit = limit;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 
 				method = new Method();
 				method.setVisibility(JavaVisibility.PUBLIC);
 				method.setReturnType(FullyQualifiedJavaType.getInteger());
-				method.setName("getMysqlLength"); //$NON-NLS-1$
-				method.addBodyLine("return mysqlLength;"); //$NON-NLS-1$
+				method.setName("getLimit"); //$NON-NLS-1$
+				method.addBodyLine("return limit;"); //$NON-NLS-1$
 				topLevelClass.addMethod(method);
 				// 增加结束处
 			}
