@@ -4,7 +4,7 @@
   "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd">
 
 <ibatorConfiguration>
-	<classPathEntry location="E:/mybatis自动生成代码/demo1/mysql-connector-java-5.1.26-bin.jar" />
+<!-- 	<classPathEntry location="E:/mybatis自动生成代码/demo1/mysql-connector-java-5.1.26-bin.jar" /> -->
 	<ibatorContext id="FlatJava5" targetRuntime="Ibatis2Java5">
 		<property name="suppressTypeWarnings" value="true" />
 		<!-- Serializable化 -->
